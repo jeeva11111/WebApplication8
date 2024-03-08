@@ -3,49 +3,63 @@ using System;
 using System.Linq;
 using WebApplication8.Data;
 using WebApplication8.Models.Video;
+using System.IO;
 
+using System.Web;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 namespace WebApplication8.Controllers
 {
     public class VideoController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public VideoController(ApplicationDbContext context)
+        private readonly IWebHostEnvironment _environment;
+
+        public VideoController(ApplicationDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
-        // GET: Video/Create
-        public IActionResult Create()
+        [HttpGet]
+        public IActionResult GetListOfVideos()
+        {
+
+            return View(_context.Videos.ToList());
+        }
+
+        [HttpGet]
+        public IActionResult CreateVideo()
         {
             return View();
         }
-        // POST: Video/Create POST: Video/Create
+
         [HttpPost]
-
-        public IActionResult Create(Video video, IFormFile imageFile)
+        public async Task<IActionResult> CreateVideo(Video video)
         {
-            video.CreatedDate = DateTime.Now;
 
-            if (imageFile != null && imageFile.Length > 0)
+            if (ModelState.IsValid)
             {
-                using (var memoryStream = new MemoryStream())
+                if (video.ImageFile != null && video.ImageFile.Length > 0)
                 {
-                    imageFile.CopyTo(memoryStream);
-                    video.Image = memoryStream.ToArray();
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await video.ImageFile.CopyToAsync(memoryStream);
+                        video.ImageData = memoryStream.ToArray();
+                        video.ImageType = video.ImageFile.ContentType;
+                    }
                 }
-                _context.Videos.Add(video);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+
+                _context.Add(video);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(GetListOfVideos));
             }
+
+
             return View(video);
         }
 
-        // GET: Video/Index
-        public IActionResult Index()
-        {
-            var videos = _context.Videos.ToList();
-            return View(videos);
-        }
+
+
     }
 }

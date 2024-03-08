@@ -1,0 +1,38 @@
+﻿@model List<WebApplication8.Models.Video.Video>
+
+@{
+    ViewData["Title"] = "Video Index";
+}
+
+<h2>Video Index</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Created Date</th>
+            <th>Image</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var video in Model)
+        {
+            <tr>
+                <td>@video.Id</td>
+                <td>@video.VideoTitle</td>
+                <td>@video.Description</td>
+                <td>@video.Category</td>
+                <td>@(video.CreatedDate.HasValue ? video.CreatedDate.Value.ToString("MM/dd/yyyy") : "")</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(video.ImageType) && video.ImageData != null)
+                    {
+                        <img src="data:@video.ImageType;base64,@Convert.ToBase64String(video.ImageData)" alt="Video Image" style="max-width: 150px;" />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

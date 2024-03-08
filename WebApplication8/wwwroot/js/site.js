@@ -1,9 +1,71 @@
 ﻿$(document).ready(() => {
-    PrintCourse();
+    GetVideos();
+    GetChennel();
 });
 
-let response;
 
+// >>---------->>> Getting the Vidoes list : Controller - Chennel
+function GetVideos() {
+    $.ajax({
+        url: '/Chennel/GetVideos', // Assuming this is the correct URL to fetch videos
+        type: 'GET',
+        success: function (res) {
+            let obj = '';
+            $.each(res, (idx, elem) => {
+                // Create HTML for each video card
+                obj += `
+                    <div class="col-xl-3 col-sm-6 mb-3">
+                        <div class="video-card">
+                            <div class="video-card-image">
+                                <a class="play-icon"><i class="fas fa-play-circle"></i></a>
+                                <a href="GetSingleVideo/${elem.id}"><img class="img-fluid" src="data:${elem.imageType};base64,${elem.imageData}" alt="Video Image"></a>
+                                <div class="time">${elem.videoTitle}</div>
+                                </div>
+                            <div class="video-card-body">
+                                <div class="video-title">
+                                    <a href="GetSingleVideo/${elem.id}">${elem.category}</a>
+                                </div>
+                                <div class="video-page text-success">
+                                    <div class="video-page text-success">
+                                        Education <a title="" data-placement="top" data-toggle="tooltip"  data-original-title="Verified"><i class="fas fa-check-circle text-success"></i></a>
+                                    </div>
+                                    <div class="video-view">
+                                        &nbsp;<i class="fas fa-calendar-alt"></i> ${elem.createdDate}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+
+            // Append the generated HTML to the designated element
+            $("#video-div").html(obj);
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+        }
+    });
+}
+
+
+
+function GetChennel() {
+
+    let obj = '';
+    $.ajax({
+        url: '/Chennel/GetChennel',
+        type: 'GET',
+        success: function (res) {
+            console.log(res);
+        }
+    })
+}
+
+
+
+
+
+/*
 function PrintCourse() {
     let obj = '';
     $.ajax({
@@ -109,3 +171,4 @@ function PopModel(id) {
     );
     $('.modal').modal('show');
 }
+*/

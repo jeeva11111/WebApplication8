@@ -22,6 +22,37 @@ namespace WebApplication8.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("WebApplication8.Models.Video.Chennel", b =>
+                {
+                    b.Property<int>("ChennelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChennelId"));
+
+                    b.Property<string>("Categorey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChennelDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChennelName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ChennelId");
+
+                    b.ToTable("Chennels");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.Video.Video", b =>
                 {
                     b.Property<int>("Id")
@@ -34,6 +65,9 @@ namespace WebApplication8.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int?>("ChennelId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -41,8 +75,11 @@ namespace WebApplication8.Migrations
                         .HasMaxLength(5355)
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Image")
+                    b.Property<byte[]>("ImageData")
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VideoTitle")
                         .HasMaxLength(355)
@@ -50,7 +87,21 @@ namespace WebApplication8.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ChennelId");
+
                     b.ToTable("Videos");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Video.Video", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.Chennel", null)
+                        .WithMany("Videos")
+                        .HasForeignKey("ChennelId");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Video.Chennel", b =>
+                {
+                    b.Navigation("Videos");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,31 @@
+﻿@model WebApplication8.Models.Video.Chennel;
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="AddChennel" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="ChennelName"></label>
+        <input asp-for="ChennelName" class="form-control" />
+        <span asp-validation-for="ChennelName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Categorey"></label>
+        <textarea asp-for="Categorey" class="form-control"></textarea>
+        <span asp-validation-for="Categorey" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ChennelDescription"></label>
+        <input asp-for="ChennelDescription" class="form-control" />
+        <span asp-validation-for="ChennelDescription" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ImageData">Upload Image</label>
+        <input type="file" name="imageFile" class="form-control-file" />
+        <span asp-validation-for="ImageData" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
