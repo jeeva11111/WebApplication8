@@ -12,7 +12,7 @@ namespace WebApplication8.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -20,11 +20,15 @@ namespace WebApplication8.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     About = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Categories = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProfileImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                    ProfileImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Department = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Roles = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,20 +40,19 @@ namespace WebApplication8.Migrations
                     ChennelName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ChennelDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Categorey = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false),
                     ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    ImageType = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ImageType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Chennels", x => x.ChennelId);
                     table.ForeignKey(
-                        name: "FK_Chennels_User_UserId",
+                        name: "FK_Chennels_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -64,6 +67,8 @@ namespace WebApplication8.Migrations
                     Category = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     ImageType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VideoData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    VideoType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ChennelId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -97,7 +102,7 @@ namespace WebApplication8.Migrations
                 name: "Chennels");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Users");
         }
     }
 }

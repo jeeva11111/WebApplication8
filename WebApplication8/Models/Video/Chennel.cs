@@ -4,6 +4,7 @@ namespace WebApplication8.Models.Video
 {
     public class Chennel
     {
+        [Key]
         public int ChennelId { get; set; }
         public string? ChennelName { get; set; }
         public string? ChennelDescription { get; set; }

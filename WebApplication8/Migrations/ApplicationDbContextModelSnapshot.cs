@@ -48,9 +48,51 @@ namespace WebApplication8.Migrations
                     b.Property<string>("ImageType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("ChennelId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Chennels");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Video.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("About")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Categories")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Department")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ProfileImage")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Roles")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Video.Video", b =>
@@ -81,15 +123,28 @@ namespace WebApplication8.Migrations
                     b.Property<string>("ImageType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("VideoData")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("VideoTitle")
                         .HasMaxLength(355)
                         .HasColumnType("nvarchar(355)");
+
+                    b.Property<string>("VideoType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ChennelId");
 
                     b.ToTable("Videos");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Video.Chennel", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.User", null)
+                        .WithMany("Chennels")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Video.Video", b =>
@@ -102,6 +157,11 @@ namespace WebApplication8.Migrations
             modelBuilder.Entity("WebApplication8.Models.Video.Chennel", b =>
                 {
                     b.Navigation("Videos");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Video.User", b =>
+                {
+                    b.Navigation("Chennels");
                 });
 #pragma warning restore 612, 618
         }

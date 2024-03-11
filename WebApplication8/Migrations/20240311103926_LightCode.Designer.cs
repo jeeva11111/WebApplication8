@@ -12,7 +12,7 @@ using WebApplication8.Data;
 namespace WebApplication8.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240307083054_LightCode")]
+    [Migration("20240311103926_LightCode")]
     partial class LightCode
     {
         /// <inheritdoc />
@@ -51,7 +51,7 @@ namespace WebApplication8.Migrations
                     b.Property<string>("ImageType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ChennelId");
@@ -75,15 +75,27 @@ namespace WebApplication8.Migrations
                     b.Property<string>("Categories")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Department")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("ProfileImage")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<string>("Roles")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Video.Video", b =>
@@ -114,9 +126,15 @@ namespace WebApplication8.Migrations
                     b.Property<string>("ImageType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("VideoData")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("VideoTitle")
                         .HasMaxLength(355)
                         .HasColumnType("nvarchar(355)");
+
+                    b.Property<string>("VideoType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -127,13 +145,9 @@ namespace WebApplication8.Migrations
 
             modelBuilder.Entity("WebApplication8.Models.Video.Chennel", b =>
                 {
-                    b.HasOne("WebApplication8.Models.Video.User", "User")
+                    b.HasOne("WebApplication8.Models.Video.User", null)
                         .WithMany("Chennels")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Video.Video", b =>

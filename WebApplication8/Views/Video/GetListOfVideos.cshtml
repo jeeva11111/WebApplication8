@@ -14,7 +14,8 @@
             <th>Description</th>
             <th>Category</th>
             <th>Created Date</th>
-            <th>Image</th>
+            <th>Thumbnail</th>
+            <th>Video</th>
         </tr>
     </thead>
     <tbody>
@@ -29,7 +30,16 @@
                 <td>
                     @if (!string.IsNullOrEmpty(video.ImageType) && video.ImageData != null)
                     {
-                        <img src="data:@video.ImageType;base64,@Convert.ToBase64String(video.ImageData)" alt="Video Image" style="max-width: 150px;" />
+                        <img src="data:@video.ImageType;base64,@Convert.ToBase64String(video.ImageData)" alt="Video Thumbnail" style="max-width: 150px;" />
+                    }
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(video.VideoType) && video.VideoData != null)
+                    {
+                        <video width="320" height="240" controls>
+                            <source src="data:@video.VideoType;base64,@Convert.ToBase64String(video.VideoData)" type="@video.VideoType">
+                            Your browser does not support the video tag.
+                        </video>
                     }
                 </td>
             </tr>

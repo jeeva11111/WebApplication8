@@ -10,7 +10,7 @@ namespace WebApplication8.Data
 		{
 
 		}
-		//public DbSet<User> Users { get; set; }
+		public DbSet<User> Users { get; set; }
 		public DbSet<Video> Videos { get; set; }
 		public DbSet<Chennel> Chennels { get; set; }
 	}

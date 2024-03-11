@@ -45,119 +45,31 @@
                     </div>
 
                     <div class="col-md-12">
-                        <div class="owl-carousel owl-carousel-category">
-                            <div class="item">
-                                <div class="category-item">
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/s1.png" alt="">
-                                        <h6>Your Life</h6>
-                                        <p>74,853 views</p>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="category-item">
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/s2.png" alt="">
-                                        <h6>Unboxing Cool</h6>
-                                        <p>74,853 views</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="category-item">
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/s3.png" alt="">
-                                        <h6>Service Reviewing</h6>
-                                        <p>74,853 views</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="category-item">
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/s4.png" alt="">
-                                        <h6>Gaming <span title="" data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i class="fas fa-check-circle text-success"></i></span></h6>
-                                        <p>74,853 views</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="category-item">
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/s5.png" alt="">
-                                        <h6>Technology Tutorials</h6>
-                                        <p>74,853 views</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="category-item">
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/s6.png" alt="">
-                                        <h6>Singing</h6>
-                                        <p>74,853 views</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="category-item">
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/s7.png" alt="">
-                                        <h6>Cooking</h6>
-                                        <p>74,853 views</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="category-item">
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/s8.png" alt="">
-                                        <h6>Traveling</h6>
-                                        <p>74,853 views</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="category-item">
-                                    <a href="#">
-                                        <img class="img-fluid" src="img/s1.png" alt="">
-                                        <h6>Education</h6>
-                                        <p>74,853 views</p>
-                                    </a>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-                <hr>
-                <div class="video-block section-padding">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="main-title">
-                                <div class="btn-group float-right right-action">
-                                    <a href="#" class="right-action-link text-gray" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Sort by <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#"><i class="fas fa-fw fa-star"></i> &nbsp; Top Rated</a>
-                                        <a class="dropdown-item" href="#"><i class="fas fa-fw fa-signal"></i> &nbsp; Viewed</a>
-                                        <a class="dropdown-item" href="#"><i class="fas fa-fw fa-times-circle"></i> &nbsp; Close</a>
+                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach (var item in Model)
+                                {
+                                    <div class="carousel-item @(item == Model.First() ? "active" : "")">
+                                        @if (!string.IsNullOrEmpty(item.ImageType) && item.ImageData != null)
+                                        {
+                                            <img src="data:@item.ImageType;base64,@Convert.ToBase64String(item.ImageData)" alt="Channel Image" style="max-width: 150px;" class="d-block w-100" />
+                                        }
                                     </div>
-                                </div>
-                                <h6>Featured Videos</h6>
+                                }
                             </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
                         </div>
-                        @* Appendind the videos from back end *@
 
-                        <div id="video-div" class="row">
-                        </div>
 
                     </div>
-                    <hr class="mt-0">
+                    <hr>
                     <div class="video-block section-padding">
                         <div class="row">
                             <div class="col-md-12">
@@ -172,78 +84,103 @@
                                             <a class="dropdown-item" href="#"><i class="fas fa-fw fa-times-circle"></i> &nbsp; Close</a>
                                         </div>
                                     </div>
-                                    <h6>Popular Channels</h6>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-sm-6 mb-3">
-                                <div class="channels-card">
-                                    <div class="channels-card-image">
-                                        <a href="#"><img class="img-fluid" src="" alt=""></a>
-                                        <div class="channels-card-image-btn"><button type="button" class="btn btn-outline-danger btn-sm">Subscribe <strong>1.4M</strong></button></div>
-                                    </div>
-                                    <div class="channels-card-body">
-                                        <div class="channels-title">
-                                            <a href="#">Channels Name</a>
-                                        </div>
-                                        <div class="channels-view">
-                                            382,323 subscribers
-                                        </div>
-                                    </div>
+                                    <h6>Featured Videos</h6>
                                 </div>
                             </div>
 
 
+                            <div id="video-div" class="row">
+                                @* Appendind the videos from back end *@
+                            </div>
+
+                        </div>
+                        <hr class="mt-0">
+                        <div class="video-block section-padding">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="main-title">
+                                        <div class="btn-group float-right right-action">
+                                            <a href="#" class="right-action-link text-gray" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Sort by <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item" href="#"><i class="fas fa-fw fa-star"></i> &nbsp; Top Rated</a>
+                                                <a class="dropdown-item" href="#"><i class="fas fa-fw fa-signal"></i> &nbsp; Viewed</a>
+                                                <a class="dropdown-item" href="#"><i class="fas fa-fw fa-times-circle"></i> &nbsp; Close</a>
+                                            </div>
+                                        </div>
+                                        <h6>Popular Channels</h6>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-sm-6 mb-3">
+                                    <div class="channels-card">
+                                        <div class="channels-card-image">
+                                            <a href="#"><img class="img-fluid" src="" alt=""></a>
+                                            <div class="channels-card-image-btn"><button type="button" class="btn btn-outline-danger btn-sm">Subscribe <strong>1.4M</strong></button></div>
+                                        </div>
+                                        <div class="channels-card-body">
+                                            <div class="channels-title">
+                                                <a href="#">Channels Name</a>
+                                            </div>
+                                            <div class="channels-view">
+                                                382,323 subscribers
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- /.container-fluid -->
-                <!-- Sticky Footer -->
-                <footer class="sticky-footer">
-                    <div class="container">
-                        <div class="row no-gutters">
-                            <div class="col-lg-6 col-sm-6">
-                                <p class="mt-1 mb-0">
-                                    <strong class="text-dark">Vidoe</strong>.
-                                    <small class="mt-0 mb-0">
-                                        <a class="text-primary" target="_blank" href="https://www.templatespoint.net/">Templates Point</a>
-                                    </small>
-                                </p>
-                            </div>
-                            <div class="col-lg-6 col-sm-6 text-right">
-                                <div class="app">
-                                    <a href="#"><img alt="" src=""></a>
-                                    <a href="#"><img alt="" src=""></a>
+                    <!-- /.container-fluid -->
+                    <!-- Sticky Footer -->
+                    <footer class="sticky-footer">
+                        <div class="container">
+                            <div class="row no-gutters">
+                                <div class="col-lg-6 col-sm-6">
+                                    <p class="mt-1 mb-0">
+                                        <strong class="text-dark">Vidoe</strong>.
+                                        <small class="mt-0 mb-0">
+                                            <a class="text-primary" target="_blank" href="https://www.templatespoint.net/">Templates Point</a>
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 text-right">
+                                    <div class="app">
+                                        <a href="#"><img alt="" src=""></a>
+                                        <a href="#"><img alt="" src=""></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </footer>
+                    </footer>
+                </div>
+                <!-- /.content-wrapper -->
             </div>
-            <!-- /.content-wrapper -->
-        </div>
-        <!-- /#wrapper -->
-        <!-- Scroll to Top Button-->
-        <a class="scroll-to-top rounded" href="#page-top">
-            <i class="fas fa-angle-up"></i>
-        </a>
-        <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="login.html">Logout</a>
+            <!-- /#wrapper -->
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+            <!-- Logout Modal-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-primary" href="login.html">Logout</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
 
 

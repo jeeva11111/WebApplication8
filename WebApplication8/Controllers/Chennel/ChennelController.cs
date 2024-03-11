@@ -12,11 +12,14 @@ namespace WebApplication8.Controllers.Chennel
         }
         public IActionResult Index()
         {
-            return View();
+            return View(_context.Chennels.ToList());
         }
 
         public IActionResult GetVideos()
         {
+
+        
+
             return Json(_context.Videos.ToList());
         }
 
@@ -45,7 +48,7 @@ namespace WebApplication8.Controllers.Chennel
                         //chennel.ImagePath = memoryStream.ToString();
                     }
                 }
-                _context.Chennels.Add(chennel);
+                _context.Chennels.Add( chennel);
                 _context.SaveChanges();
 
                 return RedirectToAction("Index");
@@ -57,16 +60,16 @@ namespace WebApplication8.Controllers.Chennel
         [HttpGet]
         public IActionResult GetSingleVideo(int id)
         {
-            var occuredVideo = _context.Videos.Where(x => x.Id == id).FirstOrDefault();
-            if (occuredVideo != null)
+            var occuredVideo = _context.Videos.FirstOrDefault(x => x.Id == id);
+
+            if (occuredVideo == null)
             {
-                
-                ViewBag.video = id;
+                return NotFound(); // or handle the null case appropriately
             }
-          
-            ViewBag.viewData = "Hello world";
+
             return View(occuredVideo);
         }
+
 
     }
 }

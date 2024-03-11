@@ -11,5 +11,10 @@ namespace WebApplication8.Models.Video
         public string? Categories { get; set; }
         public byte[]? ProfileImage { get; set; }
         public ICollection<Chennel>? Chennels { get; set; }
+        public string? Password { get; set; }
+        public string? Email { get; set; }
+        public string? Department { get; set; }
+        public string? Roles { get; set; }
+
     }
 }

@@ -2,13 +2,13 @@
 
 <ul class="sidebar navbar-nav">
     <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" asp-action="Index" asp-controller="Chennel">
             <i class="fas fa-fw fa-home"></i>
             <span>Home</span>
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="channels.html">
+        <a class="nav-link" asp-action="GetSingleVideo" asp-controller="Chennel">
             <i class="fas fa-fw fa-users"></i>
             <span>Channels</span>
         </a>
@@ -26,7 +26,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="upload-video.html">
+        <a class="nav-link" asp-action="CreateVideo" asp-controller="Video">
             <i class="fas fa-fw fa-cloud-upload-alt"></i>
             <span>Upload Video</span>
         </a>
