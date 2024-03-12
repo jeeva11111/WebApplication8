@@ -17,9 +17,6 @@ namespace WebApplication8.Controllers.Chennel
 
         public IActionResult GetVideos()
         {
-
-        
-
             return Json(_context.Videos.ToList());
         }
 
@@ -27,6 +24,7 @@ namespace WebApplication8.Controllers.Chennel
         {
             return Json(_context.Chennels.ToList());
         }
+        [HttpGet]
         public IActionResult AddChennel()
         {
             return View();
@@ -64,7 +62,7 @@ namespace WebApplication8.Controllers.Chennel
 
             if (occuredVideo == null)
             {
-                return NotFound(); // or handle the null case appropriately
+                return NotFound(); 
             }
 
             return View(occuredVideo);

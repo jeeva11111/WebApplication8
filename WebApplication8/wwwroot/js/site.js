@@ -2,6 +2,8 @@
     GetVideos();
     GetChennel();
     PrintSideVideos();
+    GetQuiz();
+    OnChangeSelectDepartment();
 });
 
 
@@ -13,18 +15,17 @@ function GetVideos() {
         success: function (res) {
             let obj = '';
             $.each(res, (idx, elem) => {
-
                 obj += `
                     <div class="col-xl-3 col-sm-6 mb-3">
                         <div class="video-card">
                             <div class="video-card-image">
                                 <a class="play-icon"><i class="fas fa-play-circle"></i></a>
-                                <a href="GetSingleVideo/${elem.id}"><img class="img-fluid" src="data:${elem.imageType};base64,${elem.imageData}" alt="Video Image"></a>
+                                <a href="/Chennel/GetSingleVideo/${elem.id}"><img id="display-image" class="img-fluid" src="data:${elem.imageType};base64,${elem.imageData}" alt="Video Image"></a>
                                 <div class="time">${elem.videoTitle}</div>
                                 </div>
                             <div class="video-card-body">
                                 <div class="video-title">
-                                    <a href="GetSingleVideo/${elem.id}">${elem.category}</a>
+                                    <a href="/Chennel/GetSingleVideo/${elem.id}">${elem.category}</a>
                                 </div>
                                 <div class="video-page text-success">
                                     <div class="video-page text-success">
@@ -58,7 +59,41 @@ function GetChennel() {
     $.ajax({
         url: '/Chennel/GetChennel',
         type: 'GET',
-    })
+        success: function (res) {
+            let obj = '';
+            $.each(res, (idx, elem) => {
+                obj += `
+                    <div class="col-xl-3 col-sm-6 mb-3">
+                        <div class="video-card">
+                            <div class="video-card-image">
+                                <a class="play-icon"><i class="fas fa-play-circle"></i></a>
+                                <a href="Chennel/GetSingleVideo/${elem.id}"><img class="img-fluid" src="data:${elem.imageType};base64,${elem.imageData}" alt="Video Image"></a>
+                                <div class="time">${elem.category}</div>
+                                </div>
+                            <div class="video-card-body">
+                                <div class="video-title">
+                                    <a href="Chennel/GetSingleVideo/${elem.id}">${elem.description}</a>
+                                </div>
+                                <div class="video-page text-success">
+                                    <div class="video-page text-success">
+                                        Education <a title="" data-placement="top" data-toggle="tooltip"  data-original-title="Verified"><i class="fas fa-check-circle text-success"></i></a>
+                                    </div>
+                                    <div class="video-view">
+                                        &nbsp;<i class="fas fa-calendar-alt"></i> ${formatDate(elem.createdDate)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+
+            // Append the generated HTML to the designated element
+            $("#chennel-div").html(obj);
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+        }
+    });
 }
 
 
@@ -130,124 +165,162 @@ function formatDate(dateString) {
     return date.toLocaleDateString('en-US', options);
 }
 
-/* success: function (res) {
-     console.log(res);
-     $.each(res, (idx, val) => {
-        
-     })
-     $("#Sidebar-videoHolder").html(obj)
- }
-})
-}
-
-*/
 
 
+//----------> Getting the Quiz
+// >>>------------->>Getting the Quiz Qustions<<<------------<<
 
-/*
-function PrintCourse() {
-    let obj = '';
+
+function GetQuiz() {
     $.ajax({
+        url: 'Quiz/GetListOfQuiz',
         type: 'GET',
-        url: '/Message/Result',
-        dataType: 'json',
+        contentType: 'json',
         success: function (res) {
-            response = res;
-            $.each(res, (idx, val) => {
-                obj += ` 
-                    <div class="card ">
-                        <div class="card-body  ">
-                            <h4 class="card-title">${val.name}</h4>
-                            <div class="card-text" id="text-container">
-                                <h5>Email: ${val.email}</h5>
-                                <p>Message: ${val.corders.date}</p>
-                            </div>
-                            <a href="#" class="btn btn-primary">More</a>
-                        </div>
-                    </div>`;
-            });
-            $("#conatner-holder").html(obj);
+            console.log(res);
+            department = res;
         },
         error: function (xhr, status, error) {
-            console.log(xhr.responseText);
+            console.error('Error occurred while fetching quiz questions: ' + error);
         }
     });
 }
 
 
-function BackEnd() {
-    let store = '';
-    $.get('/Message/Result', (res) => {
-        $.each(res, (idx, val) => {
-            store += `<div class="card m-3 " onmouseover="PopModel(${val.corders.id})">
-                        <div class="card-body  ">
-                           <h4 class="card-title" >${val.name}</h4>
-                           <h4 class="card-title">${val.textMessage}</h4>
-                           <div class="card-text" id="text-container">
-                           <h5>Email: ${val.corders.email}</h5>
-                            <p>Message: ${val.corders.password}</p>
-                            </div>
-                            <a href="#" class="btn btn-primary">More</a>
-                        </div>
-                    </div>`;
-        });
-        $("#conatner-holder").html(store);
+// >>>------------->>Getting the Quiz Qustions<<<------------<<
+
+
+function OnChangeSelectDepartment() {
+    $('#SelectDept').change(function () {
+        //  alert(this.value)
+        let selectedDepartment = $(this).val();
+        FindTheMatchingRequest(selectedDepartment);
     });
 }
 
-function DataScience() {
-    $.get("Message/CourseResults", (res) => {
-        let store = '';
-        $.each(res, (idx, val) => {
-            store += `<h1 id="${idx}" onmouseover="PopModel(${val.corders.id})">${val.email}</h1>`;
+
+function FindTheMatchingRequest(DepValue) {
+    let store = department.quizItems.filter(question => question.department === DepValue);
+    BindOptions(store)
+}
+
+function GetBinder(callback) {
+    let store;
+    $.get('Quiz/GetListOfQuiz', (res) => {
+        store = res;
+        callback(store)
+    }).fail((error) => console.log(error))
+}
+
+
+
+//function to store the values
+function BindOptions(quizData) {
+    var quizContainer = $('#quizContainer');
+    quizContainer.empty();
+
+    if (quizData.length > 0) {
+        $.each(quizData, function (index, quiz) {
+            var questionHtml = `
+            console.log(quiz)
+                    <p>${quiz.question}</p>
+                    <div class="options">`;
+            questionHtml += `</div></div > `;
+            quizContainer.append(questionHtml);
+
         });
-        $("#conatner-holder").html(store);
+    } else {
+        quizContainer.html("<p>No quizzes found for this department.</p>");
+    }
+}
+
+
+
+// >>>------------->> Quiz  Controller<<--------------<<<
+
+function RotingTheScreenOfQuiz() {
+    var prev = $("#prevBtn");
+    var next = $("#nextBtn");
+    let currentIndex = 0;
+    let quizData = [];
+
+    prev.on("click", () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            displayQuestion(currentIndex);
+        }
+    });
+
+    next.on("click", () => {
+        if (currentIndex < quizData.length - 1) {
+            currentIndex++;
+            displayQuestion(currentIndex);
+        }
+    });
+
+    // GetQuizData();
+
+    function displayQuestion(index) {
+        let quiz = quizData[index];
+        var quizContainer = $('#quizContainer');
+        quizContainer.empty();
+
+        if (quiz) {
+            var questionHtml = `
+                <div class="question">
+                    <p>${quiz.question}</p>
+                    <div class="options">`;
+
+            // Loop through each option and add radio buttons
+            $.each(quiz.depOptionsLists, function (optionIndex, option) {
+                questionHtml += `
+                    <label>
+                        <input type="radio" name="question_${index}" value="${option.title}" />
+                        ${option.title}
+                    </label><br />`;
+            });
+
+            questionHtml += `</div></div>`;
+            quizContainer.append(questionHtml);
+        } else {
+            quizContainer.html("<p>No quizzes found.</p>");
+        }
+    }
+}
+
+
+//function to store the values
+
+
+
+function GetDetailsOfCourse(Id) {
+    $('.more-info').on('click', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (res) {
+
+                alert(Id);
+                console.log(res);
+                window.location.href = url;
+
+            },
+            error: function (xhr, status, error) {
+
+                console.error(xhr.responseText);
+                alert('An error occurred while fetching course details.');
+            }
+        });
+
     });
 }
 
-function LifeStyle() {
-    $.get("Message/CourseResults", (res) => {
-        let store = '';
-        $.each(res, (idx, val) => {
-            store += `<h1 id="${idx}" onmouseover="PopModel(${val.id})">${val.name}</h1>`;
-        });
-        $("#conatner-holder").html(store);
-    });
-}
-
-function PopModel(id) {
-
-    $("#store-popup").html('');
 
 
-    let store = response.find(x => x.corders.id == id);
-    console.log(store)
 
-    $("#store-popup").append(`
-    <div class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">${store.name}</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-lable="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>ID: ${store.corders.id}</p>
-                        <p>Email: ${store.corders.name}</p>
-                        <p>Message: ${store.corders.email}</p>
-                       <a href="/${store.corders.id}">Takeme</a>
 
-                    </div>
-                    <div class="modal-footer">
-                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
-                    </div>
-                </div>
-            </div>
-        </div>`
-    );
-    $('.modal').modal('show');
-}
-*/
+

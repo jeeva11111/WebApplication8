@@ -1,0 +1,22 @@
+﻿@model WebApplication8.Models.LocalModels.QuizViewModel;
+<!-- Sidebar -->
+@Html.Partial("~/Views/Shared/_Sidebar.cshtml");
+<!-- Sidebar -->
+
+<h1 class="badge text-center">Quiz</h1>
+
+
+<div class="container">
+    <select id="SelectDept">
+        <option>Select options</option>
+        <option value="Android">Android</option>
+        <option value="iOS">IOS</option>
+        <option value="Dot Net">Dot net</option>
+        <option value="Testing">Tester</option>
+    </select>
+</div>
+
+@{
+    Html.RenderPartial("~/Views/Shared/QuizModels/_ListOfOptions.cshtml");
+}
+

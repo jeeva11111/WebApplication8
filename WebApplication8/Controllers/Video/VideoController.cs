@@ -69,11 +69,11 @@ namespace WebApplication8.Controllers
                 _context.Add(video);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Chennel");
             }
 
             return View(video);
         }
     }
-    
+
 }
