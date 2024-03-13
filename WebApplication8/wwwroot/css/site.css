@@ -1862,3 +1862,58 @@ a:hover, h1, h2, h3, h4, h5, h6 {
         display: none;
     }
 }
+
+
+
+
+/*
+  >>>--------------->>  Quiz model style  >>>----------------------->>
+*/
+
+
+
+.quiz-container {
+    max-width: 500px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+
+
+#question-container {
+    margin-bottom: 20px;
+}
+
+#question-text {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#answer-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+}
+
+
+#controls-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#timer-container {
+    display: flex;
+    align-items: center;
+}
+
+#timer-text {
+    font-size: 14px;
+}
+
+#timer {
+    font-weight: bold;
+    margin-left: 5px;
+}

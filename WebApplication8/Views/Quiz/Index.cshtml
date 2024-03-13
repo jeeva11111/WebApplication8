@@ -1,6 +1,6 @@
 ﻿@model WebApplication8.Models.LocalModels.QuizViewModel;
 <!-- Sidebar -->
-@Html.Partial("~/Views/Shared/_Sidebar.cshtml");
+@Html.Partial("~/Views/Shared/_Sidebar.cshtml")
 <!-- Sidebar -->
 
 <h1 class="badge text-center">Quiz</h1>
@@ -19,4 +19,18 @@
 @{
     Html.RenderPartial("~/Views/Shared/QuizModels/_ListOfOptions.cshtml");
 }
+
+<hr />
+<div class="quiz-container m-4 d-flex">
+    <div id="question-container" class="text-center">
+        <p id="question-text"></p>
+        <div id="answer-buttons"></div>
+    </div>
+    <div id="controls-container">
+        <button id="start-button" class="btn-outline-primary">Start Quiz</button>
+        <div id="timer-container">
+            <span id="timer-text">Time Left: <span id="timer">0</span></span>
+        </div>
+    </div>
+</div>
 

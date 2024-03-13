@@ -46,7 +46,7 @@ namespace WebApplication8.Controllers.Chennel
                         //chennel.ImagePath = memoryStream.ToString();
                     }
                 }
-                _context.Chennels.Add( chennel);
+                _context.Chennels.Add(chennel);
                 _context.SaveChanges();
 
                 return RedirectToAction("Index");
@@ -62,12 +62,13 @@ namespace WebApplication8.Controllers.Chennel
 
             if (occuredVideo == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
 
             return View(occuredVideo);
         }
-
-
     }
 }
+
+
+

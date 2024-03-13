@@ -32,13 +32,11 @@ namespace WebApplication8.Controllers.Quiz
             return Json(viewModel);
         }
 
-
         [HttpPost]
         public IActionResult SelectDepartment(string input)
         {
             var store = _context.Quiz.Where(q => q.Department == input).ToList();
             return Json(store);
         }
-
     }
 }
