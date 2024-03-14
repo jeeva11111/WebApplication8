@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication8.Data;
+using WebApplication8.Filters;
 
 namespace WebApplication8.Controllers.Chennel
 {
+
+    [CustomSessionFilter]
     public class ChennelController : Controller
     {
         private ApplicationDbContext _context;

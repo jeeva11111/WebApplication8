@@ -18,7 +18,7 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.IdleTimeout = TimeSpan.FromMinutes(1);
     options.Cookie.Name = "LearnNext";
 });
 
@@ -45,5 +45,5 @@ app.UseStaticFiles();
 app.UseSession();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Chennel}/{action=Index}/{id?}");
 app.Run();

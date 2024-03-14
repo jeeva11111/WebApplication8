@@ -30,7 +30,7 @@ namespace WebApplication8.Controllers
                 if (user != null)
                 {
                     HttpContext.Session.SetString("UserId", user.Id.ToString());
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Chennel");
                 }
                 else
                 {
