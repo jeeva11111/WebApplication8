@@ -369,7 +369,7 @@ function GetDetailsOfCourse(Id) {
                 button.text(option);
                 button.addClass("answer-button");
                 answerButtons.append(button);
-
+                     
                 // Add click event listener to check the answer
                 button.on("click", function () {
                     checkAnswer(option);

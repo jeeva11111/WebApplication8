@@ -14,7 +14,7 @@ namespace WebApplication8.Models.Video
         public string? Password { get; set; }
         public string? Email { get; set; }
         public string? Department { get; set; }
-        public string? Roles { get; set; }
+        public string? Roles { get; set; } = "user";
 
     }
 }
