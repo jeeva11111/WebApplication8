@@ -1,10 +1,8 @@
 ﻿
 let department;
 
-
-
-
 $(document).ready(() => {
+
     GetVideos();
     GetChennel();
     PrintSideVideos();
@@ -12,10 +10,29 @@ $(document).ready(() => {
     PrintSideVideos();
     OnChangeSelectDepartment();
     GetQuiz();
-    startQuiz()
+    //  startQuiz()
+    toastr.options = {
+        'closeButton': true,
+        'debug': false,
+        'newestOnTop': false,
+        'progressBar': false,
+        'positionClass': 'toast-top-right',
+        'preventDuplicates': false,
+        'showDuration': '1000',
+        'hideDuration': '1000',
+        'timeOut': '5000',
+        'extendedTimeOut': '1000',
+        'showEasing': 'swing',
+        'hideEasing': 'linear',
+        'showMethod': 'fadeIn',
+        'hideMethod': 'fadeOut',
+        'preventDuplicates': true
+    }
 
-});
-
+    $('#success').click(function (event) {
+        toastr.info('You clicked Success toast');
+    });
+})
 
 // >>---------->>> Getting the Vidoes list : Controller - Chennel
 function GetVideos() {
@@ -334,117 +351,117 @@ function GetDetailsOfCourse(Id) {
 
 
 
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let timeLeft = 30;
-    let timerInterval;
-    let quizQuestions;
+let currentQuestionIndex = 0;
+let score = 0;
+let timeLeft = 30;
+let timerInterval;
+let quizQuestions;
 
-    // Function to start the quiz
-    function startQuiz() {
-        $("#start-button").hide();
-        displayQuestion();
-        startTimer();
-    }
+// Function to start the quiz
+function startQuiz() {
+    $("#start-button").hide();
+    displayQuestion();
+    startTimer();
+}
 
-    // Function to display a question and its options
-    function displayQuestion() {
+// Function to display a question and its options
+function displayQuestion() {
+    const currentQuestion = quizQuestions[currentQuestionIndex];
+    const questionText = $("#question-text");
+    const answerButtons = $("#answer-buttons");
+
+    // Clear previous question and answer options
+    questionText.empty();
+    answerButtons.empty();
+
+    // Display the current question
+    questionText.text(currentQuestion.question);
+
+    if (currentQuestionIndex < quizQuestions.length) {
         const currentQuestion = quizQuestions[currentQuestionIndex];
-        const questionText = $("#question-text");
-        const answerButtons = $("#answer-buttons");
-
-        // Clear previous question and answer options
-        questionText.empty();
-        answerButtons.empty();
-
-        // Display the current question
         questionText.text(currentQuestion.question);
 
-        if (currentQuestionIndex < quizQuestions.length) {
-            const currentQuestion = quizQuestions[currentQuestionIndex];
-            questionText.text(currentQuestion.question);
+        currentQuestion.quizItems.forEach(option => {
+            const button = $("<button></button>");
+            button.text(option);
+            button.addClass("answer-button");
+            answerButtons.append(button);
 
-            currentQuestion.quizItems.forEach(option => {
-                const button = $("<button></button>");
-                button.text(option);
-                button.addClass("answer-button");
-                answerButtons.append(button);
-                     
-                // Add click event listener to check the answer
-                button.on("click", function () {
-                    checkAnswer(option);
-                });
+            // Add click event listener to check the answer
+            button.on("click", function () {
+                checkAnswer(option);
             });
+        });
 
 
+    }
+
+    // Function to check the selected answer
+    function checkAnswer(selectedOption) {
+        const currentQuestion = quizQuestions[currentQuestionIndex];
+
+        // Check if the selected answer is correct
+        if (selectedOption === currentQuestion.correctAnswer) {
+            score++;
         }
 
-        // Function to check the selected answer
-        function checkAnswer(selectedOption) {
-            const currentQuestion = quizQuestions[currentQuestionIndex];
+        // Move to the next question or end the quiz if all questions are answered
+        currentQuestionIndex++;
 
-            // Check if the selected answer is correct
-            if (selectedOption === currentQuestion.correctAnswer) {
-                score++;
-            }
+        if (currentQuestionIndex < quizQuestions.length) {
+            displayQuestion();
+        } else {
+            endQuiz();
+        }
+    }
 
-            // Move to the next question or end the quiz if all questions are answered
-            currentQuestionIndex++;
+    // Function to start the timer
+    function startTimer() {
+        timerInterval = setInterval(function () {
+            timeLeft--;
 
-            if (currentQuestionIndex < quizQuestions.length) {
-                displayQuestion();
-            } else {
+            // Update the timer text
+            $("#timer").text(timeLeft);
+
+            // End the quiz if time runs out
+            if (timeLeft <= 0) {
                 endQuiz();
             }
-        }
+        }, 1000);
+    }
 
-        // Function to start the timer
-        function startTimer() {
-            timerInterval = setInterval(function () {
-                timeLeft--;
+    // Function to end the quiz
+    function endQuiz() {
+        // Stop the timer
+        clearInterval(timerInterval);
 
-                // Update the timer text
-                $("#timer").text(timeLeft);
+        // Calculate the score percentage
+        const scorePercentage = (score / quizQuestions.length) * 100;
 
-                // End the quiz if time runs out
-                if (timeLeft <= 0) {
-                    endQuiz();
-                }
-            }, 1000);
-        }
-
-        // Function to end the quiz
-        function endQuiz() {
-            // Stop the timer
-            clearInterval(timerInterval);
-
-            // Calculate the score percentage
-            const scorePercentage = (score / quizQuestions.length) * 100;
-
-            // Display the final score
-            const questionContainer = $("#question-container");
-            questionContainer.html(`
+        // Display the final score
+        const questionContainer = $("#question-container");
+        questionContainer.html(`
       <h2>Quiz Completed!</h2>
       <p>Your Score: ${score} out of ${quizQuestions.length}</p>
       <p>Score Percentage: ${scorePercentage}%</p>
     `);
-        }
-
-        // AJAX request to get quiz questions
-        $.ajax({
-            url: 'Quiz/GetListOfQuiz',
-            type: 'GET',
-            success: function (res) {
-                quizQuestions = res.quizItems; // Assuming quizItems is the array of questions
-            },
-            error: function (xhr, status, error) {
-                console.error('Error occurred while fetching quiz questions: ' + error);
-            },
-            complete: function () {
-                // Call startQuiz once quizQuestions is populated
-                startQuiz();
-            }
-        });
-
     }
+
+    // AJAX request to get quiz questions
+    $.ajax({
+        url: 'Quiz/GetListOfQuiz',
+        type: 'GET',
+        success: function (res) {
+            quizQuestions = res.quizItems; // Assuming quizItems is the array of questions
+        },
+        error: function (xhr, status, error) {
+            console.error('Error occurred while fetching quiz questions: ' + error);
+        },
+        complete: function () {
+            // Call startQuiz once quizQuestions is populated
+            startQuiz();
+        }
+    });
+
+}
 

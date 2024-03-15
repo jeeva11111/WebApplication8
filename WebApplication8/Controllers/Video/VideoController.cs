@@ -7,8 +7,10 @@ using System.IO;
 
 using System.Web;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using WebApplication8.Filters;
 namespace WebApplication8.Controllers
 {
+   // [CustomSessionFilter]
     public class VideoController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,11 +23,15 @@ namespace WebApplication8.Controllers
             _environment = environment;
         }
 
+
+
+
+  
         [HttpGet]
         public IActionResult GetListOfVideos()
         {
 
-            return View(_context.Videos.ToList());
+            return Json(_context.Videos.ToList());
         }
 
         [HttpGet]

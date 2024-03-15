@@ -5,7 +5,7 @@ using WebApplication8.Filters;
 namespace WebApplication8.Controllers.Chennel
 {
 
-    [CustomSessionFilter]
+   // [CustomSessionFilter]
     public class ChennelController : Controller
     {
         private ApplicationDbContext _context;

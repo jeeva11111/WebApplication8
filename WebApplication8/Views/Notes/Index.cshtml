@@ -1,0 +1,34 @@
+﻿@model IEnumerable<WebApplication8.Models.Notes.Notes>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Task Name</th>
+            <th>Color</th>
+            <th>Description</th>
+            <th>Project Title</th>
+            <th>Folder Image</th>
+            <th>Date Time</th>
+            <th>Starred</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var note in Model)
+        {
+            <tr>
+                <td>@note.TaskName</td>
+                <td>@note.Color</td>
+                <td>@note.Description</td>
+                <td>@note.ProjectTitle</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(note.ImageType))
+                    {
+                        <img src="data:@note.ImageType;base64,@Convert.ToBase64String(note.ImageData)" alt="Folder Image" style="max-width: 100px;" />
+
+                    }
+                <td>@note.DateTime.ToString("MM/dd/yyyy")</td>
+                <td>@(note.starred ? "Yes" : "No")</td>
+            </tr>
+        }
+    </tbody>
+</table>

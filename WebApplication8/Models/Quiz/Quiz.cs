@@ -26,4 +26,6 @@ namespace WebApplication8.Models.Quiz
         public Quiz? Quiz { get; set; }
 
     }
+
+  
 }
