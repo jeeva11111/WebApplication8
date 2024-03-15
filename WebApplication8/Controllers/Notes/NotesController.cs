@@ -52,9 +52,17 @@ namespace WebApplication8.Controllers.Notes
                     ViewBag.ErrorMessage = "No file selected.";
                 }
             }
-                                                                                  
+
             // Return to the same view with a message indicating no file selected
             return View("UploadImage", model);
+        }
+
+
+        [HttpGet]
+        public IActionResult AddNodeModel()
+        {
+            var model = new Models.Notes.Notes(); // Create a new instance of Notes model
+            return PartialView("_AddNodeModel", model);
         }
     }
 }

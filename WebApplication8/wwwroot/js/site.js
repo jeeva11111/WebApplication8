@@ -465,3 +465,18 @@ function displayQuestion() {
 
 }
 
+
+// Add Notes models
+
+function AddNodeModel() {
+
+
+    $.ajax({
+        url: "/notes/AddNodeModel",
+        type: "GET",
+        success: function (data) {
+            $("#holder").html(data);
+            $('#exampleModal').modal('show');
+        }
+    });
+}
