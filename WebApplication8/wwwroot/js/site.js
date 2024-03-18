@@ -87,6 +87,9 @@ function GetChennel() {
         url: '/Chennel/GetChennel',
         type: 'GET',
         success: function (res) {
+            console.log("............")
+            console.log(res);
+            console.log("............")
             let obj = '';
             $.each(res, (idx, elem) => {
                 obj += `
@@ -94,20 +97,19 @@ function GetChennel() {
                         <div class="video-card">
                             <div class="video-card-image">
                                 <a class="play-icon"><i class="fas fa-play-circle"></i></a>
-                                <a href="Chennel/GetSingleVideo/${elem.id}"><img class="img-fluid" src="data:${elem.imageType};base64,${elem.imageData}" alt="Video Image"></a>
-                                <div class="time">${elem.category}</div>
+                                <a href="Chennel/GetSingleChannel/${elem.chennelId}"><img class="img-fluid" src="data:${elem.imageType};base64,${elem.imageData}" alt="Video Image"></a>
+                                <div class="time">${elem.chennelDescription}</div>
+                                <p>New line</p>
                                 </div>
                             <div class="video-card-body">
                                 <div class="video-title">
-                                    <a href="Chennel/GetSingleVideo/${elem.id}">${elem.description}</a>
+                                    <a href="Chennel/GetSingleChannel/${elem.chennelId}">${elem.chennelDescription}</a>
                                 </div>
                                 <div class="video-page text-success">
                                     <div class="video-page text-success">
                                         Education <a title="" data-placement="top" data-toggle="tooltip"  data-original-title="Verified"><i class="fas fa-check-circle text-success"></i></a>
                                     </div>
-                                    <div class="video-view">
-                                        &nbsp;<i class="fas fa-calendar-alt"></i> ${formatDate(elem.createdDate)}
-                                    </div>
+                               
                                 </div>
                             </div>
                         </div>

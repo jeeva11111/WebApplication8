@@ -1,21 +1,41 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication8.Data;
+using WebApplication8.Models.Video;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using WebApplication8.Filters;
+using Microsoft.EntityFrameworkCore;
 
-namespace WebApplication8.Controllers.Chennel
+namespace WebApplication8.Controllers
 {
-
-   // [CustomSessionFilter]
+    [CustomSessionFilter]
     public class ChennelController : Controller
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
+
         public ChennelController(ApplicationDbContext context)
         {
             _context = context;
         }
+
         public IActionResult Index()
         {
-            return View(_context.Chennels.ToList());
+            var channelsWithVideos = _context.Chennels
+                .Include(c => c.Videos)
+                .ToList();
+
+           
+            foreach (var channel in channelsWithVideos)
+            {
+                if (channel.Videos == null)
+                {
+                    channel.Videos = new List<Video>();
+                }
+            }
+
+            return View(channelsWithVideos);
         }
 
         public IActionResult GetVideos()
@@ -27,6 +47,7 @@ namespace WebApplication8.Controllers.Chennel
         {
             return Json(_context.Chennels.ToList());
         }
+
         [HttpGet]
         public IActionResult AddChennel()
         {
@@ -34,44 +55,63 @@ namespace WebApplication8.Controllers.Chennel
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddChennel(Models.Video.Chennel chennel, IFormFile imageFile)
+        public async Task<IActionResult> AddChennel(Chennel chennel, IFormFile imageData, IFormFile bannerData)
         {
-
             if (ModelState.IsValid)
             {
-                if (imageFile != null && imageFile.Length > 0)
+                if (imageData != null && imageData.Length > 0)
                 {
                     using (var memoryStream = new MemoryStream())
                     {
-                        await imageFile.CopyToAsync(memoryStream);
+                        await imageData.CopyToAsync(memoryStream);
                         chennel.ImageData = memoryStream.ToArray();
-                        chennel.ImageType = imageFile.ContentType;
-                        //chennel.ImagePath = memoryStream.ToString();
+                        chennel.ImageType = imageData.ContentType;
                     }
                 }
+
+                if (bannerData != null && bannerData.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await bannerData.CopyToAsync(memoryStream);
+                        chennel.BannerData = memoryStream.ToArray();
+                        chennel.BannerPath = bannerData.ContentType;
+                    }
+                }
+                chennel.UserId =  Convert.ToInt32(HttpContext.Session.GetString("UserId"));
                 _context.Chennels.Add(chennel);
                 _context.SaveChanges();
 
                 return RedirectToAction("Index");
             }
+
             return View(chennel);
         }
 
-        // Getting the single page video;
         [HttpGet]
         public IActionResult GetSingleVideo(int id)
         {
-            var occuredVideo = _context.Videos.FirstOrDefault(x => x.Id == id);
+            var occurredVideo = _context.Videos.FirstOrDefault(x => x.Id == id);
 
-            if (occuredVideo == null)
+            if (occurredVideo == null)
             {
                 return NotFound();
             }
 
-            return View(occuredVideo);
+            return View(occurredVideo);
+        }
+
+        [HttpGet]
+        public IActionResult GetSingleChannel(int id)
+        {
+            var occurredChannel = _context.Chennels.FirstOrDefault(x => x.ChennelId == id);
+
+            if (occurredChannel == null)
+            {
+                return NotFound();
+            }
+
+            return View(occurredChannel);
         }
     }
 }
-
-
-

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using WebApplication8.Filters;
 namespace WebApplication8.Controllers
 {
-   // [CustomSessionFilter]
+    [CustomSessionFilter]
     public class VideoController : Controller
     {
         private readonly ApplicationDbContext _context;

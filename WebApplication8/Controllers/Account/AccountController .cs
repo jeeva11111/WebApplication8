@@ -9,7 +9,7 @@ using WebApplication8.Models.Video;
 namespace WebApplication8.Controllers
 {
 
-   // [CustomSessionFilter]
+   
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;

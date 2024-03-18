@@ -1,0 +1,94 @@
+﻿@model WebApplication8.Models.Video.Chennel
+
+<div class="single-channel-page" id="content-wrapper">
+    <div class="single-channel-image">
+        <!-- Display Channel Banner -->
+        <img class="img-fluid" alt="Channel Banner" src="data:@($"image/{Model.BannerPath}");base64,{Convert.ToBase64String(Model.BannerData)}">
+        <div class="channel-profile">
+            <!-- Display Channel Profile Image -->
+            <img class="channel-profile-img" alt="Channel Profile" src="data:@($"image/{Model.ImageType}");base64,{Convert.ToBase64String(Model.ImageData)}">
+            <div class="social hidden-xs">
+                Social &nbsp;
+                <a class="fb" href="#">Facebook</a>
+                <a class="tw" href="#">Twitter</a>
+                <a class="gp" href="#">Google</a>
+            </div>
+        </div>
+    </div>
+    <div class="single-channel-nav">
+        <!-- Display Channel Name -->
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="channel-brand" href="#">@Model.ChennelName <span title="" data-placement="top" data-toggle="tooltip"
+                    data-original-title="Verified"><i class="fas fa-check-circle text-success"></i></span></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Videos <span class="sr-only">(current)</span></a>
+                    </li>
+                    <!-- Other Channel Navigation Links -->
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control form-control-sm mr-sm-1" type="search" placeholder="Search"
+                        aria-label="Search"><button class="btn btn-outline-success btn-sm my-2 my-sm-0" type="submit"><i
+                            class="fas fa-search"></i></button> &nbsp;&nbsp;&nbsp; <button
+                        class="btn btn-outline-danger btn-sm" type="button">Subscribe <span>1.4M</strong></button>
+                </form>
+            </div>
+        </nav>
+    </div>
+    <div class="container-fluid">
+        <div class="video-block section-padding">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="main-title">
+                        <h6>Videos</h6>
+                    </div>
+                </div>
+                @foreach (var video in Model.Videos)
+                {
+                    <div class="col-xl-3 col-sm-6 mb-3">
+                        <div class="video-card">
+                            <!-- Display Video Image -->
+                            <div class="video-card-image">
+                                <a class="play-icon" href="#"><i class="fas fa-play-circle"></i></a>
+                                <a href="#"><img class="img-fluid" src="data:@($"image/{video.ImageType}");base64,{Convert.ToBase64String(video.ImageData)}" alt="@video.VideoTitle"></a>
+                                <div class="time">3:50</div>
+                            </div>
+                            <div class="video-card-body">
+                                <!-- Display Video Title -->
+                                <div class="video-title">
+                                    <a href="#">@video.VideoTitle</a>
+                                </div>
+                                <!-- Display Video Category -->
+                                <div class="video-page text-success">
+                                    @video.Category  <a title="" data-placement="top" data-toggle="tooltip" href="#" data-original-title="Verified"><i class="fas fa-check-circle text-success"></i></a>
+                                </div>
+                                <!-- Display Video View Count -->
+                                <div class="video-view">
+                                    1.8M views &nbsp;<i class="fas fa-calendar-alt"></i> 11 Months ago
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center pagination-sm mb-0">
+                <li class="page-item disabled">
+                    <a tabindex="-1" href="#" class="page-link">Previous</a>
+                </li>
+                <li class="page-item active"><a href="#" class="page-link">1</a></li>
+                <li class="page-item"><a href="#" class="page-link">2</a></li>
+                <li class="page-item"><a href="#" class="page-link">3</a></li>
+                <li class="page-item">
+                    <a href="#" class="page-link">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

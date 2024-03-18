@@ -12,8 +12,8 @@ using WebApplication8.Data;
 namespace WebApplication8.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240315122552_updatedNotes-v1")]
-    partial class updatedNotesv1
+    [Migration("20240318135440_channel")]
+    partial class channel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,17 +36,16 @@ namespace WebApplication8.Migrations
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Data")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FolderImagePath")
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProjectTitle")
@@ -125,6 +124,12 @@ namespace WebApplication8.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChennelId"));
 
+                    b.Property<byte[]>("BannerData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("BannerPath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Categorey")
                         .HasColumnType("nvarchar(max)");
 
@@ -137,13 +142,10 @@ namespace WebApplication8.Migrations
                     b.Property<byte[]>("ImageData")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ImageType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ChennelId");
@@ -202,7 +204,7 @@ namespace WebApplication8.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("ChennelId")
+                    b.Property<int>("ChannelId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedDate")
@@ -230,7 +232,7 @@ namespace WebApplication8.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChennelId");
+                    b.HasIndex("ChannelId");
 
                     b.ToTable("Videos");
                 });
@@ -257,16 +259,24 @@ namespace WebApplication8.Migrations
 
             modelBuilder.Entity("WebApplication8.Models.Video.Chennel", b =>
                 {
-                    b.HasOne("WebApplication8.Models.Video.User", null)
+                    b.HasOne("WebApplication8.Models.Video.User", "User")
                         .WithMany("Chennels")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Video.Video", b =>
                 {
-                    b.HasOne("WebApplication8.Models.Video.Chennel", null)
+                    b.HasOne("WebApplication8.Models.Video.Chennel", "Channel")
                         .WithMany("Videos")
-                        .HasForeignKey("ChennelId");
+                        .HasForeignKey("ChannelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Channel");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Quiz.Quiz", b =>

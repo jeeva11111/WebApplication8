@@ -6,7 +6,7 @@
 
 <h2>Create</h2>
 
-<form asp-action="AddChennel" method="post" enctype="multipart/form-data">
+<form asp-action="AddChennel" asp-controller="Chennel" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="ChennelName"></label>
         <input asp-for="ChennelName" class="form-control" />
@@ -24,14 +24,15 @@
     </div>
     <div class="form-group">
         <label asp-for="ImageData">Upload Image</label>
-        <input type="file" name="imageFile" class="form-control-file" />
+        <input type="file" name="ImageData" class="form-control-file" />
         <span asp-validation-for="ImageData" class="text-danger"></span>
     </div>
+
+    <div class="form-group">
+        <label asp-for="BannerData">Upload Banner Image</label>
+        <input type="file" name="BannerData" class="form-control-file" />
+        <span asp-validation-for="BannerData" class="text-danger"></span>
+    </div>
+
     <button type="submit" class="btn btn-primary">Create</button>
 </form>
-
-
-<br />
-<br />
-<hr />
-<button id="success" type="button" class="btn btn-sm btn-primary">button</button>
