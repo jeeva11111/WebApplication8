@@ -12,8 +12,8 @@ using WebApplication8.Data;
 namespace WebApplication8.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240318135440_channel")]
-    partial class channel
+    [Migration("20240319120736_FileSend")]
+    partial class FileSend
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

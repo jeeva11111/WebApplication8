@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebApplication8.Migrations
 {
     /// <inheritdoc />
-    public partial class channel : Migration
+    public partial class FileSend : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

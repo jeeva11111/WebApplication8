@@ -482,3 +482,12 @@ function AddNodeModel() {
         }
     });
 }
+
+
+function logoutModelCaller() {
+    $("#logoutModal").modal("show");
+}
+
+function logoutModelHider() {
+    $("#logoutModal").modal("hide");
+}

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplication8.Filters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace WebApplication8.Controllers
 {
@@ -20,23 +21,14 @@ namespace WebApplication8.Controllers
             _context = context;
         }
 
+
         public IActionResult Index()
         {
-            var channelsWithVideos = _context.Chennels
-                .Include(c => c.Videos)
-                .ToList();
-
-           
-            foreach (var channel in channelsWithVideos)
-            {
-                if (channel.Videos == null)
-                {
-                    channel.Videos = new List<Video>();
-                }
-            }
-
+            List<Chennel>? channelsWithVideos = _context.Chennels.Include(x=> x.Videos).ToList();
             return View(channelsWithVideos);
+           
         }
+
 
         public IActionResult GetVideos()
         {

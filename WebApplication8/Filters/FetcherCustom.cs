@@ -7,7 +7,6 @@ namespace WebApplication8.Filters
 		public override void OnActionExecuting(ActionExecutingContext context)
 		{
 		
-			
 			base.OnActionExecuting(context);
 		}
 	}

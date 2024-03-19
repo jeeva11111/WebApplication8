@@ -9,7 +9,7 @@ using WebApplication8.Models.Video;
 namespace WebApplication8.Controllers
 {
 
-   
+
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -77,6 +77,7 @@ namespace WebApplication8.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
+            Response.Cookies.Delete("LearnNext");
             return RedirectToAction("Login");
         }
     }
