@@ -10,6 +10,7 @@ namespace WebApplication8.Models.Account
 
         [Required]
         public string? Password { get; set; }
+
     }
 
     public class Register

@@ -10,6 +10,7 @@ $(document).ready(() => {
     PrintSideVideos();
     OnChangeSelectDepartment();
     GetQuiz();
+
     //  startQuiz()
     toastr.options = {
         'closeButton': true,
@@ -65,6 +66,8 @@ function GetVideos() {
                             </div>
                         </div>
                     </div>`;
+
+
             });
 
             // Append the generated HTML to the designated element
@@ -490,4 +493,29 @@ function logoutModelCaller() {
 
 function logoutModelHider() {
     $("#logoutModal").modal("hide");
+}
+
+
+// Getting Notification
+
+function GetNotification() {
+
+    $.ajax({
+        url: '/Account/JsonRetrun',
+        type: 'GET',
+        success: function (res) {
+            console.log(res);
+            // Set the modal content
+            $("#title").text(res.title);
+            $("#message").text(res.message);
+            $("#email").text(res.email);
+            // Show the modal
+            $("#notifaction-container").css("display", "block");
+
+            $("#notificationModal").modal("show");
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
 }
