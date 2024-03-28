@@ -12,8 +12,8 @@ using WebApplication8.Data;
 namespace WebApplication8.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240319120736_FileSend")]
-    partial class FileSend
+    [Migration("20240327122157_updated-Subscribers")]
+    partial class updatedSubscribers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,28 @@ namespace WebApplication8.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("WebApplication8.Models.Account.Profile.UserProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AudioCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Subscribers")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VideoCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserProfiles");
+                });
 
             modelBuilder.Entity("WebApplication8.Models.Notes.Notes", b =>
                 {
@@ -60,6 +82,39 @@ namespace WebApplication8.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Notes");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Notify.Notify", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChennelId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifys");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Quiz.DepOptionsList", b =>
@@ -155,6 +210,29 @@ namespace WebApplication8.Migrations
                     b.ToTable("Chennels");
                 });
 
+            modelBuilder.Entity("WebApplication8.Models.Video.Subscribes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChennelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChennelId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Subscribes");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.Video.User", b =>
                 {
                     b.Property<int>("Id")
@@ -237,6 +315,17 @@ namespace WebApplication8.Migrations
                     b.ToTable("Videos");
                 });
 
+            modelBuilder.Entity("WebApplication8.Models.Notify.Notify", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.User", "UserList")
+                        .WithMany("Notify")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserList");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.Quiz.DepOptionsList", b =>
                 {
                     b.HasOne("WebApplication8.Models.Quiz.Quiz", "Quiz")
@@ -268,6 +357,25 @@ namespace WebApplication8.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("WebApplication8.Models.Video.Subscribes", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.Chennel", "Chennel")
+                        .WithMany()
+                        .HasForeignKey("ChennelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication8.Models.Video.User", "User")
+                        .WithMany("Subscribers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chennel");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.Video.Video", b =>
                 {
                     b.HasOne("WebApplication8.Models.Video.Chennel", "Channel")
@@ -292,6 +400,10 @@ namespace WebApplication8.Migrations
             modelBuilder.Entity("WebApplication8.Models.Video.User", b =>
                 {
                     b.Navigation("Chennels");
+
+                    b.Navigation("Notify");
+
+                    b.Navigation("Subscribers");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,8 +12,8 @@ using WebApplication8.Data;
 namespace WebApplication8.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240321134928_notify-model")]
-    partial class notifymodel
+    [Migration("20240325075942_addedModels")]
+    partial class addedModels
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,7 +82,12 @@ namespace WebApplication8.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Notifys");
                 });
@@ -262,6 +267,17 @@ namespace WebApplication8.Migrations
                     b.ToTable("Videos");
                 });
 
+            modelBuilder.Entity("WebApplication8.Models.Notify.Notify", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.User", "UserList")
+                        .WithMany("Notify")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserList");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.Quiz.DepOptionsList", b =>
                 {
                     b.HasOne("WebApplication8.Models.Quiz.Quiz", "Quiz")
@@ -317,6 +333,8 @@ namespace WebApplication8.Migrations
             modelBuilder.Entity("WebApplication8.Models.Video.User", b =>
                 {
                     b.Navigation("Chennels");
+
+                    b.Navigation("Notify");
                 });
 #pragma warning restore 612, 618
         }

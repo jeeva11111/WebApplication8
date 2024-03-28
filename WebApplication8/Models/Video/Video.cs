@@ -7,8 +7,8 @@ namespace WebApplication8.Models.Video
 {
     public class Video
     {
-        
-  [Key]
+
+        [Key]
         public int Id { get; set; }
 
         [MaxLength(355)]
@@ -41,7 +41,7 @@ namespace WebApplication8.Models.Video
         public int ChannelId { get; set; }
 
         [ForeignKey("ChannelId")]
-        public Chennel? Channel { get; set; } 
+        public Chennel? Channel { get; set; }
 
     }
 }

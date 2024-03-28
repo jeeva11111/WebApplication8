@@ -5,25 +5,24 @@
 namespace WebApplication8.Migrations
 {
     /// <inheritdoc />
-    public partial class notifymodel : Migration
+    public partial class updatedprofileCards : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Notifys",
+                name: "UserProfiles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    VideoCount = table.Column<int>(type: "int", nullable: false),
+                    Subscribers = table.Column<int>(type: "int", nullable: false),
+                    AudioCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Notifys", x => x.Id);
+                    table.PrimaryKey("PK_UserProfiles", x => x.Id);
                 });
         }
 
@@ -31,7 +30,7 @@ namespace WebApplication8.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Notifys");
+                name: "UserProfiles");
         }
     }
 }

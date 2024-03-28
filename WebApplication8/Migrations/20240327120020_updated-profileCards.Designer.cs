@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication8.Data;
 
@@ -11,9 +12,11 @@ using WebApplication8.Data;
 namespace WebApplication8.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240327120020_updated-profileCards")]
+    partial class updatedprofileCards
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,39 +171,6 @@ namespace WebApplication8.Migrations
                     b.ToTable("Quiz");
                 });
 
-            modelBuilder.Entity("WebApplication8.Models.Video.Audio", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ChannelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChannelId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Audio");
-                });
-
             modelBuilder.Entity("WebApplication8.Models.Video.Chennel", b =>
                 {
                     b.Property<int>("ChennelId")
@@ -238,29 +208,6 @@ namespace WebApplication8.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Chennels");
-                });
-
-            modelBuilder.Entity("WebApplication8.Models.Video.Subscribes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ChennelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChennelId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Subscribes");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Video.User", b =>
@@ -376,21 +323,6 @@ namespace WebApplication8.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WebApplication8.Models.Video.Audio", b =>
-                {
-                    b.HasOne("WebApplication8.Models.Video.Chennel", "Channel")
-                        .WithMany()
-                        .HasForeignKey("ChannelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApplication8.Models.Video.User", null)
-                        .WithMany("Audio")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Channel");
-                });
-
             modelBuilder.Entity("WebApplication8.Models.Video.Chennel", b =>
                 {
                     b.HasOne("WebApplication8.Models.Video.User", "User")
@@ -398,25 +330,6 @@ namespace WebApplication8.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("WebApplication8.Models.Video.Subscribes", b =>
-                {
-                    b.HasOne("WebApplication8.Models.Video.Chennel", "Chennel")
-                        .WithMany()
-                        .HasForeignKey("ChennelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApplication8.Models.Video.User", "User")
-                        .WithMany("Subscribers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chennel");
 
                     b.Navigation("User");
                 });
@@ -444,13 +357,9 @@ namespace WebApplication8.Migrations
 
             modelBuilder.Entity("WebApplication8.Models.Video.User", b =>
                 {
-                    b.Navigation("Audio");
-
                     b.Navigation("Chennels");
 
                     b.Navigation("Notify");
-
-                    b.Navigation("Subscribers");
                 });
 #pragma warning restore 612, 618
         }

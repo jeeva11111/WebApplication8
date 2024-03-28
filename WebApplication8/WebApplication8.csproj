@@ -20,9 +20,14 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.12" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Nexmo.Csharp.Client" Version="5.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\NewFolder\" />
+    <Folder Include="Views\History\" />
+    <Folder Include="Views\NewFolder\" />
+    <Folder Include="Views\Shared\History\" />
     <Folder Include="wwwroot\Images\videos\" />
   </ItemGroup>
 

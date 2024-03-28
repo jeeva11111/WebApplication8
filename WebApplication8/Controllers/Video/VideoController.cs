@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
 using WebApplication8.Data;
 using WebApplication8.Models.Video;
-using System.IO;
-
-using System.Web;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using WebApplication8.Filters;
-using System.Threading.Channels;
+using Microsoft.Data.SqlClient;
+using System.Data;
+using WebApplication8.Models.Notify;
+using System.Configuration;
 namespace WebApplication8.Controllers
 {
     [CustomSessionFilter]
@@ -23,8 +20,8 @@ namespace WebApplication8.Controllers
             _context = context;
             _environment = environment;
         }
-        
-  
+
+
         [HttpGet]
         public IActionResult GetListOfVideos()
         {
@@ -33,19 +30,23 @@ namespace WebApplication8.Controllers
         }
 
         [HttpGet]
+
         public IActionResult CreateVideo()
         {
             return View();
         }
 
-
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [NotificationFilter]
         public async Task<IActionResult> CreateVideo(Video video)
         {
             if (ModelState.IsValid)
             {
-                // Upload Image
+                HttpContext.Items["VideoTitle"] = video.VideoTitle;
+                HttpContext.Items["VideoDescription"] = video.Description;
+
+                //HttpContext.Session.SetInt32("ChennelId", video.ChannelId);
+               
                 if (video.ImageFile != null && video.ImageFile.Length > 0)
                 {
                     using (var stream = new MemoryStream())
@@ -67,25 +68,17 @@ namespace WebApplication8.Controllers
                     video.VideoType = video.VideoFile.ContentType;
                 }
 
-                // Set Created Date
                 video.CreatedDate = DateTime.Now;
 
-                // Get the ChannelId from the currently logged-in user or some other source
-                int channelId = GetChannelIdForCurrentUser(); // Implement this method to get ChannelId
-
-                // Check if the channel with the provided channelId exists
+                int channelId = GetChannelIdForCurrentUser();
+                HttpContext.Items["ChennelId"] = channelId;
                 var channel = _context.Chennels.FirstOrDefault(c => c.ChennelId == channelId);
                 if (channel == null)
                 {
-                    // Channel with the provided channelId does not exist
-                    // Handle this case, perhaps return an error or redirect
                     return RedirectToAction("Error", "Home");
                 }
 
-                // Assign the channelId to the video
                 video.ChannelId = channelId;
-
-                // Add to database
                 _context.Add(video);
                 await _context.SaveChangesAsync();
 
@@ -95,20 +88,23 @@ namespace WebApplication8.Controllers
             return View(video);
         }
 
+        // Getting the video Notifaction message after posting the video
+        [HttpGet]
+        public JsonResult GetAllNotify()
+        {
+            var selectNotify = _context.Notifys.ToList();
+            return Json(new {selectedNotify = selectNotify.LastOrDefault() }) ;
+        }
 
         private int GetChannelIdForCurrentUser()
         {
-            // Example: Retrieve UserId from session
             string userIdString = HttpContext.Session.GetString("UserId");
 
-            // Convert UserId to integer (you should handle conversion/validation)
             int userId = Convert.ToInt32(userIdString);
 
-            // Query the database for the user's channel
             var userChannel = _context.Chennels.FirstOrDefault(c => c.UserId == userId);
 
-            // Return ChannelId if userChannel is found, otherwise return a default value or handle as needed
-            return userChannel?.ChennelId ?? 0; // Return 0 or some default value if userChannel is null
+            return userChannel?.ChennelId ?? 0;
         }
 
 

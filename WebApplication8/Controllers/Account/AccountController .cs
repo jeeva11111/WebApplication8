@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApplication8.Controllers.Notify;
+
 using WebApplication8.Data;
 using WebApplication8.Filters;
-using WebApplication8.Models.Account;
+using WebApplication8.Models.Account.Profile;
+using WebApplication8.Models.DTO;
 using WebApplication8.Models.Video;
 
 namespace WebApplication8.Controllers
@@ -15,15 +16,13 @@ namespace WebApplication8.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        //private readonly NotifyController _notifyController;
-        private readonly Notifaction _notifaction;
 
         public List<String> _loggedInUsers;
 
-        public AccountController(ApplicationDbContext context, Notifaction notifaction)
+        public AccountController(ApplicationDbContext context)
         {
             _context = context;
-            _notifaction = notifaction;
+
         }
 
         public IActionResult Login()
@@ -39,8 +38,7 @@ namespace WebApplication8.Controllers
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == login.Email && u.Password == login.Password);
                 if (user != null)
                 {
-
-
+                    HttpContext.Items["CurrentUser"] = user.Name;
                     HttpContext.Session.SetString("UserId", user.Id.ToString());
                     HttpContext.Session.SetString("UserName", user.Email.ToString());
                     // return RedirectToAction("JsonRetrun");
@@ -95,14 +93,49 @@ namespace WebApplication8.Controllers
             Response.Cookies.Delete("LearnNext");
             return RedirectToAction("Login");
         }
-    
 
-        //public JsonResult JsonRetrun()
+
+        public JsonResult JsonRetrun()
+        {
+
+            var currentEmail = HttpContext.Session.GetString("UserName");
+            return Json(new { Email = currentEmail, Message = "Successfully logged in ", Title = "Login in Message" });
+        }
+
+
+        //public ObjectResult GetCurrentUser()
         //{
-
-        //    var currentEmail = HttpContext.Session.GetString("UserName");
-        //    return Json(new { Email = currentEmail, Message = "Successfully logged in ", Title = "Login in Message" });
+        //    return new ObjectResult(new string[] { "default  string " });
         //}
+
+
+        public IActionResult Profile()
+        {
+            return View();
+        }
+
+        [HttpGet]
+
+        public IActionResult  ProfileCardDetails()
+        {
+
+            UserProfileDTO userProfileCount = new UserProfileDTO();
+            userProfileCount.AudioCount = _context.Audio.Count();
+            userProfileCount.Subscribers = _context.Subscribes.Count();
+            userProfileCount.VideoCount = _context.Videos.Count();
+
+            return Json(new { result = userProfileCount });
+        }
+
+        public IActionResult History()
+        {
+            return PartialView("~/Views/Shared/History/_history.cshtml");
+        }
+
+        public IActionResult Hosting()
+        {
+            return View();
+        }
     }
 
 }

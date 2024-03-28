@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebApplication8.Models.Account.Profile;
 using WebApplication8.Models.Notes;
 using WebApplication8.Models.Notify;
 using WebApplication8.Models.Quiz;
@@ -20,5 +21,10 @@ namespace WebApplication8.Data
         public DbSet<DepOptionsList> DepOptionsLists { get; set; }
         public DbSet<Notes> Notes { get; set; }
         public DbSet<Notify> Notifys { get; set; }
+
+        public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<Subscribes> Subscribes { get; set; } 
+        public DbSet<Audio> Audio { get; set; }
+
     }
 }

@@ -1,15 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using WebApplication8.Controllers.Notify;
+
 using WebApplication8.Data;
 using WebApplication8.Models.Video;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// Add services to the container
+//
+
+builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 builder.Services.AddMvc().AddRazorRuntimeCompilation();
-builder.Services.AddScoped<Notifaction>();
 
 // Add DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

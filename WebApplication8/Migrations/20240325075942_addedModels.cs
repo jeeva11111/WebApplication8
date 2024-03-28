@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebApplication8.Migrations
 {
     /// <inheritdoc />
-    public partial class FileSend : Migration
+    public partial class addedModels : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -71,6 +71,29 @@ namespace WebApplication8.Migrations
                     table.PrimaryKey("PK_Chennels", x => x.ChennelId);
                     table.ForeignKey(
                         name: "FK_Chennels_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notifys",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifys", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notifys_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -158,6 +181,11 @@ namespace WebApplication8.Migrations
                 column: "QuizId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Notifys_UserId",
+                table: "Notifys",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Quiz_UserId",
                 table: "Quiz",
                 column: "UserId");
@@ -176,6 +204,9 @@ namespace WebApplication8.Migrations
 
             migrationBuilder.DropTable(
                 name: "Notes");
+
+            migrationBuilder.DropTable(
+                name: "Notifys");
 
             migrationBuilder.DropTable(
                 name: "Videos");

@@ -64,5 +64,9 @@ namespace WebApplication8.Controllers.Notes
             var model = new Models.Notes.Notes(); // Create a new instance of Notes model
             return PartialView("_AddNodeModel", model);
         }
+        public IActionResult AddNotes()
+        {
+            return PartialView("_HomeCaller");
+        }
     }
 }

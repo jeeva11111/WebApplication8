@@ -2,7 +2,6 @@
 let department;
 
 $(document).ready(() => {
-
     GetVideos();
     GetChennel();
     PrintSideVideos();
@@ -10,8 +9,15 @@ $(document).ready(() => {
     PrintSideVideos();
     OnChangeSelectDepartment();
     GetQuiz();
-
+    GetNotification();
+    ProfileCard();
+    // NotifyCurrentUserMessage();
+    //NotifyVideoPostMessage();
     //  startQuiz()
+    GetNotify();
+
+
+
     toastr.options = {
         'closeButton': true,
         'debug': false,
@@ -498,8 +504,10 @@ function logoutModelHider() {
 
 // Getting Notification
 
-function GetNotification() {
 
+
+function GetNotification() {
+    var i = 0;
     $.ajax({
         url: '/Account/JsonRetrun',
         type: 'GET',
@@ -511,8 +519,101 @@ function GetNotification() {
             $("#email").text(res.email);
             // Show the modal
             $("#notifaction-container").css("display", "block");
-
             $("#notificationModal").modal("show");
+            $("#notify-msg").text(i += 1);
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}
+
+
+//function NotifyCurrentUserMessage() {
+//    $.ajax({
+//        url: 'Account/GetCurrentUser',
+//        type: 'GET',
+//        success: function (res) {
+//            console.log(res);
+//        }
+//    })
+//}
+
+
+function GetNotify() {
+    $.ajax({
+        url: 'Video/GetAllNotify',
+        type: 'GET',
+        success: function (res) {
+            console.log(res)
+        }
+    })
+}
+
+
+
+function ProfileCard() {
+    $.ajax({
+        url: '/Account/ProfileCardDetails',
+        type: 'GET',
+        success: function (res) {
+            let userProfileCount = res.result;
+            // Create HTML for each card using received data
+            let cardsHtml = `
+                <div class="row" id="profile-cards-list">
+                    <div class="col-xl-3 col-sm-6 mb-3">
+                        <div class="card text-white bg-warning o-hidden h-100 border-none">
+                            <div class="card-body">
+                                <div class="card-body-icon">
+                                    <i class="fas fa-fw fa-video"></i>
+                                </div>
+                                <div class="mr-5"><b>${userProfileCount.subscribers}</b> Subscribers</div>
+                            </div>
+                            <a class="card-footer text-white clearfix small z-1" href="#">
+                                <span class="float-left">View Details</span>
+                                <span class="float-right">
+                                    <i class="fas fa-angle-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-sm-6 mb-3">
+                        <div class="card text-white bg-success o-hidden h-100 border-none">
+                            <div class="card-body">
+                                <div class="card-body-icon">
+                                    <i class="fas fa-fw fa-list-alt"></i>
+                                </div>
+                                <div class="mr-5"><b>${userProfileCount.audioCount}</b> Audios Posted</div>
+                            </div>
+                            <a class="card-footer text-white clearfix small z-1" href="#">
+                                <span class="float-left">View Details</span>
+                                <span class="float-right">
+                                    <i class="fas fa-angle-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-sm-6 mb-3">
+                        <div class="card text-white bg-danger o-hidden h-100 border-none">
+                            <div class="card-body">
+                                <div class="card-body-icon">
+                                    <i class="fas fa-fw fa-cloud-upload-alt"></i>
+                                </div>
+                                <div class="mr-5"><b>${userProfileCount.videoCount}</b> New Videos</div>
+                            </div>
+                            <a class="card-footer text-white clearfix small z-1" href="#">
+                                <span class="float-left">View Details</span>
+                                <span class="float-right">
+                                    <i class="fas fa-angle-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            $("#holder-card-profile").html(cardsHtml);
         },
         error: function (error) {
             console.log(error);
