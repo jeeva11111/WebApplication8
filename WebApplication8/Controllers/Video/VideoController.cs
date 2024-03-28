@@ -45,7 +45,7 @@ namespace WebApplication8.Controllers
                 HttpContext.Items["VideoTitle"] = video.VideoTitle;
                 HttpContext.Items["VideoDescription"] = video.Description;
 
-                //HttpContext.Session.SetInt32("ChennelId", video.ChannelId);
+                HttpContext.Session.SetInt32("GetChennelId", video.ChannelId);
                
                 if (video.ImageFile != null && video.ImageFile.Length > 0)
                 {

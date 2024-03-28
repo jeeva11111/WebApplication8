@@ -140,9 +140,10 @@ namespace WebApplication8.Controllers
         [HttpGet]
         public IActionResult InduvialVideoPostedList()
         {
-            var ChennelId = Convert.ToInt32((HttpContext.Items["ChennelId"]));
-            var storeList = _context.Videos.Where(x => x.ChannelId == 1).Select(x => x.Category == "Programming").ToList();
-
+            //ChennelId
+            var ChennelId = Convert.ToInt32((HttpContext.Session.GetInt32("GetChennelId")));
+            var storeList = (from x in _context.Videos where x.ChannelId == 1 select new { title = x.VideoTitle, description = x.Description, category = x.Category, image = x.ImageFile }).ToList();
+            //var selectedVideos = _context.Videos.Where(x=> x.ChannelId ==1 ).ToList();
             return Json(new { message = storeList });
         }
     }
