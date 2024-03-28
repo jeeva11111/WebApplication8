@@ -11,6 +11,7 @@ $(document).ready(() => {
     GetQuiz();
     GetNotification();
     ProfileCard();
+    GetUserVideos();
     // NotifyCurrentUserMessage();
     //NotifyVideoPostMessage();
     //  startQuiz()
@@ -75,7 +76,7 @@ function GetVideos() {
 
 
             });
-
+         
             // Append the generated HTML to the designated element
             $("#video-div").html(obj);
         },
@@ -542,7 +543,7 @@ function GetNotification() {
 
 function GetNotify() {
     $.ajax({
-        url: 'Video/GetAllNotify',
+        url: '/Video/GetAllNotify',
         type: 'GET',
         success: function (res) {
             console.log(res)
@@ -551,7 +552,7 @@ function GetNotify() {
 }
 
 
-
+// Profile cards 
 function ProfileCard() {
     $.ajax({
         url: '/Account/ProfileCardDetails',
@@ -619,4 +620,18 @@ function ProfileCard() {
             console.log(error);
         }
     });
+}
+
+
+// Induvidual Videos
+
+
+function GetUserVideos() {
+    $.ajax({
+        url: '/Account/InduvialVideoPostedList',
+        type: 'GET',
+        success: function (res) {
+            console.log(res);
+        }
+    })
 }

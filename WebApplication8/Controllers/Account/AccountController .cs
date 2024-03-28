@@ -116,7 +116,7 @@ namespace WebApplication8.Controllers
 
         [HttpGet]
 
-        public IActionResult  ProfileCardDetails()
+        public IActionResult ProfileCardDetails()
         {
 
             UserProfileDTO userProfileCount = new UserProfileDTO();
@@ -136,6 +136,14 @@ namespace WebApplication8.Controllers
         {
             return View();
         }
-    }
 
+        [HttpGet]
+        public IActionResult InduvialVideoPostedList()
+        {
+            var ChennelId = Convert.ToInt32((HttpContext.Items["ChennelId"]));
+            var storeList = _context.Videos.Where(x => x.ChannelId == 1).Select(x => x.Category == "Programming").ToList();
+
+            return Json(new { message = storeList });
+        }
+    }
 }
