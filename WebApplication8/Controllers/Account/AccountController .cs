@@ -119,9 +119,14 @@ namespace WebApplication8.Controllers
         {
 
             UserProfileDTO userProfileCount = new UserProfileDTO();
+            string userIdString = HttpContext.Session.GetString("UserId");
+
+            int userId = Convert.ToInt32(userIdString);
+
+
             userProfileCount.AudioCount = _context.Audio.Count();
             userProfileCount.Subscribers = _context.Subscribes.Count();
-            userProfileCount.VideoCount = _context.Videos.Count();
+            userProfileCount.VideoCount = (from v in _context.Videos where v.ChannelId == userId select v.Id).Count();
 
             return Json(new { result = userProfileCount });
         }
@@ -139,7 +144,6 @@ namespace WebApplication8.Controllers
         [HttpGet]
         public IActionResult InduvialVideoPostedList()
         {
-
             string userIdString = HttpContext.Session.GetString("UserId");
 
             int userId = Convert.ToInt32(userIdString);
