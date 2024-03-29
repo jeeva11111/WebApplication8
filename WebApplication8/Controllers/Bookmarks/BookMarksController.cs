@@ -10,7 +10,6 @@ namespace WebApplication8.Controllers.Bookmarks
             return View();
         }
 
-
         [HttpGet]
         public JsonResult JsonArray()
         {

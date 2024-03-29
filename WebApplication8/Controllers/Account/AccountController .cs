@@ -72,7 +72,6 @@ namespace WebApplication8.Controllers
                 {
                     _context.Users.Add(new User { Email = register.Email, Password = register.Password });
                     _context.SaveChanges();
-
                     TempData["SuccessMessage"] = "Registration successful. Please login.";
                     return RedirectToAction("Login");
                 }
@@ -140,11 +139,19 @@ namespace WebApplication8.Controllers
         [HttpGet]
         public IActionResult InduvialVideoPostedList()
         {
-            //ChennelId
-            var ChennelId = Convert.ToInt32((HttpContext.Session.GetInt32("GetChennelId")));
-            var storeList = (from x in _context.Videos where x.ChannelId == 1 select new { title = x.VideoTitle, description = x.Description, category = x.Category, image = x.ImageFile }).ToList();
+
+            string userIdString = HttpContext.Session.GetString("UserId");
+
+            int userId = Convert.ToInt32(userIdString);
+
+            var userChannel = _context.Chennels.FirstOrDefault(c => c.UserId == userId);
+            //    var ChennelId = Convert.ToInt32((HttpContext.Session.GetInt32("GetChennelId")));
+            var storeList = (from x in _context.Videos where x.ChannelId == userChannel.ChennelId select new { title = x.VideoTitle, description = x.Description, category = x.Category, imageType = x.ImageType, imageData = x.ImageData }).ToList();
             //var selectedVideos = _context.Videos.Where(x=> x.ChannelId ==1 ).ToList();
             return Json(new { message = storeList });
         }
     }
 }
+
+
+// 

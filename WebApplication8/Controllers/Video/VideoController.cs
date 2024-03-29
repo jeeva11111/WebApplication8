@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using WebApplication8.Models.Notify;
 using System.Configuration;
+using Microsoft.AspNetCore.Http;
 namespace WebApplication8.Controllers
 {
     [CustomSessionFilter]
@@ -46,7 +47,7 @@ namespace WebApplication8.Controllers
                 HttpContext.Items["VideoDescription"] = video.Description;
 
                 HttpContext.Session.SetInt32("GetChennelId", video.ChannelId);
-               
+
                 if (video.ImageFile != null && video.ImageFile.Length > 0)
                 {
                     using (var stream = new MemoryStream())
@@ -79,6 +80,7 @@ namespace WebApplication8.Controllers
                 }
 
                 video.ChannelId = channelId;
+
                 _context.Add(video);
                 await _context.SaveChangesAsync();
 
@@ -93,7 +95,7 @@ namespace WebApplication8.Controllers
         public JsonResult GetAllNotify()
         {
             var selectNotify = _context.Notifys.ToList();
-            return Json(new {selectedNotify = selectNotify.LastOrDefault() }) ;
+            return Json(new { selectedNotify = selectNotify.LastOrDefault() });
         }
 
         private int GetChannelIdForCurrentUser()

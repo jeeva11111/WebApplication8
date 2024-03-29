@@ -76,7 +76,7 @@ function GetVideos() {
 
 
             });
-         
+
             // Append the generated HTML to the designated element
             $("#video-div").html(obj);
         },
@@ -626,12 +626,51 @@ function ProfileCard() {
 // Induvidual Videos
 
 
+
 function GetUserVideos() {
     $.ajax({
         url: '/Account/InduvialVideoPostedList',
         type: 'GET',
         success: function (res) {
             console.log(res);
+            $("#profile-video-list").empty(); 
+
+            if (res.message && res.message.length > 0) {
+                $.each(res.message, function (idx, val) {
+                    var videoCard = `
+                        <div class="col-xl-3 col-sm-6 mb-3">
+                            <div class="video-card">
+                                <div class="video-card-image">
+                                    <a class="play-icon" href="#"><i class="fas fa-play-circle"></i></a>
+
+                                            <a href="Chennel/GetSingleChannel/${val.chennelId}"><img class="img-fluid" src="data:${val.imageType};base64,${val.imageData}" alt="Video Image"></a>
+                                <div class="time">${val.chennelDescription}</div>
+                                    <!-- Use val.image which should be the correct image path -->
+                                    <div class="time">3:50</div>
+                                </div>
+                                <div class="video-card-body">
+                                    <div class="video-title">
+                                        <a href="#">${val.title}</a>
+                                    </div>
+                                    <div class="video-page text-success">
+                                        <a title="" data-placement="top" data-toggle="tooltip" href="#" data-original-title="Verified">
+                                            <i class="fas fa-check-circle text-success"></i>
+                                        </a>
+                                    </div>
+                                    <div class="video-view">
+                                        1.8M views &nbsp;<i class="fas fa-calendar-alt"></i> 11 Months ago
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                    $("#profile-video-list").append(videoCard);
+                });
+            } else {
+                $("#profile-video-list").html("<p>No videos found.</p>");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
         }
-    })
+    });
 }
