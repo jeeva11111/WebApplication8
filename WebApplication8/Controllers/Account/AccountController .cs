@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using WebApplication8.Data;
 using WebApplication8.Filters;
 using WebApplication8.Models.Account.Profile;
@@ -102,12 +102,6 @@ namespace WebApplication8.Controllers
         }
 
 
-        //public ObjectResult GetCurrentUser()
-        //{
-        //    return new ObjectResult(new string[] { "default  string " });
-        //}
-
-
         public IActionResult Profile()
         {
             return View();
@@ -122,11 +116,15 @@ namespace WebApplication8.Controllers
             string userIdString = HttpContext.Session.GetString("UserId");
 
             int userId = Convert.ToInt32(userIdString);
+            var userChannel = _context.Chennels.FirstOrDefault(c => c.UserId == userId);
 
 
             userProfileCount.AudioCount = _context.Audio.Count();
             userProfileCount.Subscribers = _context.Subscribes.Count();
-            userProfileCount.VideoCount = (from v in _context.Videos where v.ChannelId == userId select v.Id).Count();
+
+            userProfileCount.VideoCount = (from x in _context.Videos where x.ChannelId == userChannel.ChennelId  select x.Id).Count();
+
+            //userProfileCount.VideoCount = (from v in _context.Videos where v.ChannelId == 3 select v.Id).Count();
 
             return Json(new { result = userProfileCount });
         }
@@ -154,6 +152,7 @@ namespace WebApplication8.Controllers
             //var selectedVideos = _context.Videos.Where(x=> x.ChannelId ==1 ).ToList();
             return Json(new { message = storeList });
         }
+
     }
 }
 
