@@ -1,0 +1,151 @@
+﻿@{
+    ViewBag.Title = "File Manager";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Manager</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>File Manager</h2>
+
+        <!-- File List -->
+        <ul id="fileList" class="list-group mt-4">
+            <!-- File and folder items will be dynamically added here -->
+        </ul>
+
+        <!-- Upload File Form -->
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group mt-4">
+                <input type="file" name="file" class="form-control-file">
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+
+        <!-- Create Folder Button -->
+        <button id="createFolderBtn" class="btn btn-success mt-3">Create Folder</button>
+
+        <!-- Delete Selected Button -->
+        <button id="deleteSelectedBtn" class="btn btn-danger mt-3">Delete Selected</button>
+    </div>
+
+    <!-- Include jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        $(document).ready(function () {
+            // Handle form submission for file upload
+            $('#uploadForm').submit(function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '/FileManager/Upload',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        console.log('File uploaded:', data);
+                        // Refresh file list after upload
+                        getFileList();
+                    },
+                    error: function (error) {
+                        console.error('Error uploading file:', error);
+                    }
+                });
+            });
+
+            // Handle create folder button click
+            $('#createFolderBtn').click(function () {
+                var folderName = prompt('Enter folder name:');
+                if (folderName) {
+                    $.ajax({
+                        url: '/FileManager/CreateFolder',
+                        type: 'POST',
+                        data: { folderName: folderName },
+                        success: function () {
+                            console.log('Folder created:', folderName);
+                            // Refresh file list after creating folder
+                            getFileList();
+                        },
+                        error: function (error) {
+                            console.error('Error creating folder:', error);
+                        }
+                    });
+                }
+            });
+
+            // Handle delete selected button click
+            $('#deleteSelectedBtn').click(function () {
+                var selectedFiles = $('#fileList input[type="checkbox"]:checked').map(function () {
+                    console.log($(this).val())
+                    return $(this).val();
+                }).get();
+
+                if (selectedFiles.length === 0) {
+                    alert('Please select files/folders to delete.');
+                    return;
+                }
+
+                if (confirm('Are you sure you want to delete the selected items?')) {
+                    $.ajax({
+                        url: '/FileManager/DeleteSelected',
+                        type: 'POST',
+                        contentType: 'application/json', // Set content type to JSON
+                        data: JSON.stringify(selectedFiles), // Stringify the data
+                        success: function () {
+                            console.log('Selected items deleted.');
+                            // Refresh file list after deleting items
+                            getFileList();
+                        },
+                        error: function (error) {
+                            console.error('Error deleting items:', error);
+                        }
+                    });
+                }
+            });
+
+
+        // Initial file list retrieval
+        getFileList();
+
+        // Function to get the file list from the server
+        function getFileList() {
+            $.ajax({
+                url: '/FileManager/GetFileList',
+                type: 'GET',
+                success: function (data) {
+                    displayFileList(data);
+                },
+                error: function (error) {
+                    console.error('Error getting file list:', error);
+                }
+            });
+        }
+
+        // Function to display the file list
+        function displayFileList(files) {
+            var fileList = $('#fileList');
+            fileList.empty();
+
+            files.forEach(function (file) {
+                var listItem = $('<li class="list-group-item"></li>');
+                var checkbox = $('<input type="checkbox" class="file-checkbox" value="' + file.name + '">');
+                var fileName = $('<span>' + file.name + '</span>');
+
+                listItem.append(checkbox);
+                listItem.append(fileName);
+                fileList.append(listItem);
+            });
+        }
+                });
+    </script>
+</body>
+</html>

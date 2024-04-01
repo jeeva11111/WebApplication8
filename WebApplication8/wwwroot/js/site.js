@@ -17,7 +17,7 @@ $(document).ready(() => {
     //  startQuiz()
     GetNotify();
 
-
+    //  GetServices()
 
     toastr.options = {
         'closeButton': true,
@@ -529,6 +529,35 @@ function GetNotification() {
     });
 }
 
+function GetNotify() {
+    $.ajax({
+        url: '/Video/GetAllNotify',
+        type: 'GET',
+        success: function (res) {
+            console.log(res)
+            $.each(res, (idx, val) => {
+                jQuery('#v-pills-inbox').css("overflow-y", "scroll");
+                $("#v-pills-inbox").append(`<i>${val.message}</i>`)
+                $("#v-pills-inbox").append(`<hr/>`)
+                $("#v-pills-inbox").append(`<i>${val.title}</i>`)
+                $("#v-pills-inbox").append(`<hr/>`)
+           
+            })
+        }
+    })
+}
+
+
+function GetServices() {
+    $.ajax({
+        url: '/BookMarks/JsonArray',
+        type: 'GET',
+        success: function (res) {
+
+            $("#app-services").css('display', 'block');
+        }
+    });
+}
 
 //function NotifyCurrentUserMessage() {
 //    $.ajax({
@@ -541,15 +570,7 @@ function GetNotification() {
 //}
 
 
-function GetNotify() {
-    $.ajax({
-        url: '/Video/GetAllNotify',
-        type: 'GET',
-        success: function (res) {
-            console.log(res)
-        }
-    })
-}
+
 
 
 // Profile cards 
@@ -633,7 +654,7 @@ function GetUserVideos() {
         type: 'GET',
         success: function (res) {
             console.log(res);
-            $("#profile-video-list").empty(); 
+            $("#profile-video-list").empty();
 
             if (res.message && res.message.length > 0) {
                 $.each(res.message, function (idx, val) {

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebApplication8.Models.FileManager;
 using WebApplication8.Models.Notify;
 
 namespace WebApplication8.Models.Video
@@ -23,6 +24,8 @@ namespace WebApplication8.Models.Video
         public string? Email { get; set; }
         public string? Department { get; set; }
         public string? Roles { get; set; } = "user";
+
+        public ICollection<Models.FileManager.FileManager> fileManagers { get; set; }
 
     }
 }

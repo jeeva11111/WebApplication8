@@ -10,10 +10,14 @@ namespace WebApplication8.Controllers.Bookmarks
             return View();
         }
 
+        public IActionResult MailServices()
+        {
+            return PartialView("~/Views/Shared/History_MailServices.cshtml");
+        }
         [HttpGet]
         public JsonResult JsonArray()
         {
-            return Json(new { message = "valid" });
+            return Json(new { message = new string[] { "time", "space", "life", "Alive" } });
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApplication8.Models.Account.Profile;
+using WebApplication8.Models.FileManager;
 using WebApplication8.Models.Notes;
 using WebApplication8.Models.Notify;
 using WebApplication8.Models.Quiz;
@@ -23,8 +24,9 @@ namespace WebApplication8.Data
         public DbSet<Notify> Notifys { get; set; }
 
         public DbSet<UserProfile> UserProfiles { get; set; }
-        public DbSet<Subscribes> Subscribes { get; set; } 
+        public DbSet<Subscribes> Subscribes { get; set; }
         public DbSet<Audio> Audio { get; set; }
+        public DbSet<FileManager> fileManagers { get; set; }
 
     }
 }

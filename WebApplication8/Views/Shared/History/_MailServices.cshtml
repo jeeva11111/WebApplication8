@@ -1,0 +1,38 @@
+﻿<div id="app-services" style="display:none; width : 300px;">
+    <nav class="navbar">
+        <button id="toggleDrawer" class="navbar-toggler" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <span class="navbar-brand mb-0 h1" style="margin-left: 20px;">New uploaded Message</span>
+    </nav>
+    <div class="drawer d-flex">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <a class="nav-link active" id="v-pills-inbox-tab" data-toggle="pill" href="#v-pills-inbox" role="tab" aria-controls="v-pills-inbox" aria-selected="true"><i class="fas fa-inbox"></i> Inbox</a>
+            <a class="nav-link" id="v-pills-notifications-tab" data-toggle="pill" href="#v-pills-notifications" role="tab" aria-controls="v-pills-notifications" aria-selected="false"><i class="fas fa-bell"></i> Notifications</a>
+            <a class="nav-link" id="v-pills-calendar-tab" data-toggle="pill" href="#v-pills-calendar" role="tab" aria-controls="v-pills-calendar" aria-selected="false"><i class="fas fa-calendar-alt"></i> Calendar</a>
+            <a class="nav-link" id="v-pills-attachments-tab" data-toggle="pill" href="#v-pills-attachments" role="tab" aria-controls="v-pills-attachments" aria-selected="false"><i class="fas fa-paperclip"></i> Attachments</a>
+            <a class="nav-link" id="v-pills-favourites-tab" data-toggle="pill" href="#v-pills-favourites" role="tab" aria-controls="v-pills-favourites" aria-selected="false"><i class="fas fa-star"></i> Favourites</a>
+        </div>
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-inbox" role="tabpanel" aria-labelledby="v-pills-inbox-tab"></div>
+            <div class="tab-pane fade" id="v-pills-notifications" role="tabpanel" aria-labelledby="v-pills-notifications-tab">Notifications content here...</div>
+            <div class="tab-pane fade" id="v-pills-calendar" role="tabpanel" aria-labelledby="v-pills-calendar-tab">Calendar content here...</div>
+            <div class="tab-pane fade" id="v-pills-attachments" role="tabpanel" aria-labelledby="v-pills-attachments-tab">Attachments content here...</div>
+            <div class="tab-pane fade" id="v-pills-favourites" role="tabpanel" aria-labelledby="v-pills-favourites-tab">Favourites content here...</div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    #v-pills-inbox {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    i {
+        font-size: 12px;
+        font-weight: 300;
+    }
+
+</style>
