@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApplication8.Models.Account.Profile;
+using WebApplication8.Models.ExFile;
 using WebApplication8.Models.FileManager;
 using WebApplication8.Models.Notes;
 using WebApplication8.Models.Notify;
@@ -27,6 +28,10 @@ namespace WebApplication8.Data
         public DbSet<Subscribes> Subscribes { get; set; }
         public DbSet<Audio> Audio { get; set; }
         public DbSet<FileManager> fileManagers { get; set; }
+
+        public DbSet<Folder> Folder { get; set; }
+        public DbSet<ExFile> ExFiles { get; set; }
+        public DbSet<Models.ExFile.Image> Images { get; set; }
 
     }
 }

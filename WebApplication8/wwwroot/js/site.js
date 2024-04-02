@@ -16,7 +16,7 @@ $(document).ready(() => {
     //NotifyVideoPostMessage();
     //  startQuiz()
     GetNotify();
-
+    GetFolderUpdates();
     //  GetServices()
 
     toastr.options = {
@@ -40,6 +40,13 @@ $(document).ready(() => {
     $('#success').click(function (event) {
         toastr.info('You clicked Success toast');
     });
+
+
+
+
+
+
+
 })
 
 // >>---------->>> Getting the Vidoes list : Controller - Chennel
@@ -541,7 +548,7 @@ function GetNotify() {
                 $("#v-pills-inbox").append(`<hr/>`)
                 $("#v-pills-inbox").append(`<i>${val.title}</i>`)
                 $("#v-pills-inbox").append(`<hr/>`)
-           
+
             })
         }
     })
@@ -695,3 +702,25 @@ function GetUserVideos() {
         }
     });
 }
+
+
+
+function GetFolderUpdates() {
+    $.ajax({
+        url: '/ExFile/GetFolders',
+        type: 'GET',
+
+        success: function (data) {
+            alert("printing the record")
+
+            $('#folderContainer').empty();
+            $.each(data, function (key, folder) {
+
+                $('#folderContainer').append('<div >' + folder.name + '</div>');
+            });
+        },
+        error: function (xhr, status, error) {
+            console.log("Error occurred: " + error);
+        }
+    });
+} 

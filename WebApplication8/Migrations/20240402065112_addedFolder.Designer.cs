@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication8.Data;
 
@@ -11,9 +12,11 @@ using WebApplication8.Data;
 namespace WebApplication8.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240402065112_addedFolder")]
+    partial class addedFolder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,28 +93,6 @@ namespace WebApplication8.Migrations
                     b.HasIndex("FolderId1");
 
                     b.ToTable("Folder");
-                });
-
-            modelBuilder.Entity("WebApplication8.Models.ExFile.Image", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FolderId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FolderId");
-
-                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.FileManager.FileManager", b =>
@@ -469,17 +450,6 @@ namespace WebApplication8.Migrations
                     b.HasOne("WebApplication8.Models.ExFile.Folder", null)
                         .WithMany("SubFolder")
                         .HasForeignKey("FolderId1");
-                });
-
-            modelBuilder.Entity("WebApplication8.Models.ExFile.Image", b =>
-                {
-                    b.HasOne("WebApplication8.Models.ExFile.Folder", "Folder")
-                        .WithMany()
-                        .HasForeignKey("FolderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Folder");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.FileManager.FileManager", b =>
