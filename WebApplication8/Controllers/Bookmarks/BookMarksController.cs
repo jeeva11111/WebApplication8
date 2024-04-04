@@ -14,6 +14,7 @@ namespace WebApplication8.Controllers.Bookmarks
         {
             return PartialView("~/Views/Shared/History_MailServices.cshtml");
         }
+
         [HttpGet]
         public JsonResult JsonArray()
         {

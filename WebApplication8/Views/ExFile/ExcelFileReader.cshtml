@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "ExcelFileReader";
+}
+
+<h1>ExcelFileReader</h1>
+
+
+
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <label>File Upload</label>
+        <input type="file" name="file" />
+    </div>
+    <div class="row" style="padding-top:10px;">
+        <div class="col-4">
+            <input type="submit" asp-action="ExcelFileReader" asp-controller="ExFile" value="Upload" class=" btn btn-primery" />
+        </div>
+    </div>
+</form>
+
+
+
+<table class="table table-striped border">
+    <thead>
+        @if (ViewBag.excelSheet != null && ViewBag.excelSheet.Count > 0)
+        {
+            @for (var i = 0; i < ViewBag.excelSheet.Count; i++)
+            {
+                <tr>
+                    @foreach (var item in ViewBag.excelSheet[i])
+                    {
+                        <td>@item</td>
+                    }
+                </tr>
+            }
+        }
+    </thead>
+    <tbody>
+    </tbody>
+</table>

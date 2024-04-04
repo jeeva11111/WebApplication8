@@ -33,5 +33,6 @@ namespace WebApplication8.Data
         public DbSet<ExFile> ExFiles { get; set; }
         public DbSet<Models.ExFile.Image> Images { get; set; }
 
+        public DbSet<ImageUploadModel> ImageFile { get; set; }
     }
 }

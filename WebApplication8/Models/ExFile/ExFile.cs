@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using WebApplication8.Models.Video;
 
 namespace WebApplication8.Models.ExFile
 {
@@ -31,7 +33,15 @@ namespace WebApplication8.Models.ExFile
     }
     public class ImageUploadModel
     {
+        [Key]
         public int FolderId { get; set; }
-        public IFormFile ImageFile { get; set; }
+        public string? Title { get; set; }
+        [NotMapped]
+        public IFormFile? ImageFile { get; set; }
+        public string? ImageType { get; set; }
+        public byte[]? ImageData { get; set;  }
+        public User? User { get; set; }
+        public int UserId { get; set; }
+
     }
 }

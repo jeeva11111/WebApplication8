@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
+﻿using ExcelDataReader;
+using Microsoft.AspNetCore.Mvc;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using ExcelDataReader.Exceptions;
 using WebApplication8.Data;
 using WebApplication8.Models.ExFile;
 
+using ExcelDataReader.Core;
+using System.Text;
 namespace WebApplication8.Controllers.ExFile
 {
     public class ExFileController : Controller
@@ -16,24 +19,28 @@ namespace WebApplication8.Controllers.ExFile
         {
             _context = context;
         }
-
         public IActionResult Index()
         {
             return View();
         }
 
-        [HttpGet, Route("ExFile/GetFoldersAndImages")]
-        public async Task<IActionResult> GetFoldersAndImages(int? parentFolderId)
+        [HttpPost]
+        [Route("ExFile/AddFile")]
+        public async Task<IActionResult> AddFile([FromForm] ImageUploadModel model)
         {
-            var folders = await _context.Folder
-                .Where(f => f.ParentFolderId == parentFolderId)
-                .ToListAsync();
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("File", "Please select a file ");
+                return Json(new { message = "Model data is not valid" });
+            }
+            return Json(new { success = false, message = "No file uploaded." });
+        }
 
-            var images = await _context.Images
-                .Where(i => i.FolderId == parentFolderId)
-                .ToListAsync();
-
-            return Json(new { folders, images });
+        [HttpGet]
+        public IActionResult AddTaskDrive()
+        {
+            var listOfTaskDrive = _context.ImageFile.ToList();
+            return PartialView("_AddTaskModel", listOfTaskDrive);
         }
 
         [HttpPost, Route("ExFile/AddFolder")]
@@ -44,7 +51,6 @@ namespace WebApplication8.Controllers.ExFile
             await _context.SaveChangesAsync();
             return Ok();
         }
-
 
         [HttpPost, Route("ExFile/AddImage")]
         public async Task<IActionResult> AddImage([FromForm] ImageUploadModel model)
@@ -101,7 +107,50 @@ namespace WebApplication8.Controllers.ExFile
             }
         }
 
-    }
+        [HttpPost]
+        public IActionResult ExcelFileReader()
+        {
+            try
+            {
+                List<List<object>> excelData = new List<List<object>>();
 
+                // Reading the Excel file from the request
+                using (var stream = new MemoryStream())
+                {
+                    var file = Request.Form.Files["file"];
+                    file.CopyTo(stream);
+
+                    // Specify UTF-8 encoding
+                    Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                    using (var reader = ExcelReaderFactory.CreateReader(stream, new ExcelReaderConfiguration()
+                    {
+                        FallbackEncoding = Encoding.GetEncoding(1252)
+
+                    }))
+                    {
+                        do
+                        {
+                            while (reader.Read())
+                            {
+                                var rowData = new List<object>();
+                                for (int column = 0; column < reader.FieldCount; column++)
+                                {
+                                    rowData.Add(reader.GetValue(column));
+                                }
+                                excelData.Add(rowData);
+                            }
+                        } while (reader.NextResult());
+                    }
+                }
+                // Return JSON data
+                return Json(new { excelData = excelData });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error processing Excel file: " + ex.Message);
+            }
+        }
+    }
 }
+
 

@@ -12,8 +12,8 @@ using WebApplication8.Data;
 namespace WebApplication8.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240327122157_updated-Subscribers")]
-    partial class updatedSubscribers
+    [Migration("20240403102538_updated-mageFile-v2")]
+    partial class updatedmageFilev2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +45,142 @@ namespace WebApplication8.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserProfiles");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.ExFile.ExFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FolderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FolderId");
+
+                    b.ToTable("ExFiles");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.ExFile.Folder", b =>
+                {
+                    b.Property<int>("FolderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FolderId"));
+
+                    b.Property<int?>("FolderId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ParentFolderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FolderId");
+
+                    b.HasIndex("FolderId1");
+
+                    b.ToTable("Folder");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.ExFile.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FolderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FolderId");
+
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.ExFile.ImageUploadModel", b =>
+                {
+                    b.Property<int>("FolderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FolderId"));
+
+                    b.Property<byte[]>("FileData")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FolderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ImageFile");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.FileManager.FileManager", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("HasDirectories")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDirectory")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("fileManagers");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Notes.Notes", b =>
@@ -169,6 +305,39 @@ namespace WebApplication8.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Quiz");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Video.Audio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChannelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChannelId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Audio");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Video.Chennel", b =>
@@ -315,6 +484,57 @@ namespace WebApplication8.Migrations
                     b.ToTable("Videos");
                 });
 
+            modelBuilder.Entity("WebApplication8.Models.ExFile.ExFile", b =>
+                {
+                    b.HasOne("WebApplication8.Models.ExFile.Folder", "Folder")
+                        .WithMany("ExFiles")
+                        .HasForeignKey("FolderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Folder");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.ExFile.Folder", b =>
+                {
+                    b.HasOne("WebApplication8.Models.ExFile.Folder", null)
+                        .WithMany("SubFolder")
+                        .HasForeignKey("FolderId1");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.ExFile.Image", b =>
+                {
+                    b.HasOne("WebApplication8.Models.ExFile.Folder", "Folder")
+                        .WithMany()
+                        .HasForeignKey("FolderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Folder");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.ExFile.ImageUploadModel", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.User", "User")
+                        .WithMany("ImageUploads")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.FileManager.FileManager", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.User", "user")
+                        .WithMany("fileManagers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("user");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.Notify.Notify", b =>
                 {
                     b.HasOne("WebApplication8.Models.Video.User", "UserList")
@@ -344,6 +564,21 @@ namespace WebApplication8.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Video.Audio", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.Chennel", "Channel")
+                        .WithMany()
+                        .HasForeignKey("ChannelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication8.Models.Video.User", null)
+                        .WithMany("Audio")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Channel");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Video.Chennel", b =>
@@ -387,6 +622,13 @@ namespace WebApplication8.Migrations
                     b.Navigation("Channel");
                 });
 
+            modelBuilder.Entity("WebApplication8.Models.ExFile.Folder", b =>
+                {
+                    b.Navigation("ExFiles");
+
+                    b.Navigation("SubFolder");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.Quiz.Quiz", b =>
                 {
                     b.Navigation("DepOptionsLists");
@@ -399,11 +641,17 @@ namespace WebApplication8.Migrations
 
             modelBuilder.Entity("WebApplication8.Models.Video.User", b =>
                 {
+                    b.Navigation("Audio");
+
                     b.Navigation("Chennels");
+
+                    b.Navigation("ImageUploads");
 
                     b.Navigation("Notify");
 
                     b.Navigation("Subscribers");
+
+                    b.Navigation("fileManagers");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,5 @@
-﻿
+﻿const { data } = require("jquery");
+
 let department;
 
 $(document).ready(() => {
@@ -723,4 +724,44 @@ function GetFolderUpdates() {
             console.log("Error occurred: " + error);
         }
     });
-} 
+}
+
+
+$('#fileUploadForm').on('submit', function (e) {
+    e.preventDefault(); // Prevent the normal submission action
+
+    var formData = new FormData(this);
+
+    $.ajax({
+        url: '/ExFile/AddFile', // Ensure correct route
+        type: 'POST',
+        data: formData,
+        contentType: false, // Necessity for FormData
+        processData: false, // Necessity for FormData
+        success: function (data) {
+            if (data.success) {
+                alert('File uploaded successfully');
+                $('#exampleModalCenter').modal('hide'); // Close the modal upon success
+                window.location = "/ExFile/Index";
+            } else {
+                alert('No file uploaded or error occurred.');
+            }
+        },
+        error: function () {
+            alert('There was an error with the file upload');
+        }
+    });
+});
+
+
+
+function AddTaskModel() {
+    $.ajax({
+        url: "/notes/AddNodeModel",
+        type: "GET",
+        success: function (data) {
+            $("#holder").html(data);
+            $('#exampleModal').modal('show');
+        }
+    });
+}

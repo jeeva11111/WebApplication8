@@ -50,6 +50,13 @@
                                 <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModalCenter">
                                     Upload New Item
                                 </button>
+
+                        
+
+                                <!-- Button to open modal -->
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#excelModal">
+                                    Open Excel Modal
+                                </button>
                             </div>
                         </div>
                         <div class="content-utilities">
@@ -192,26 +199,15 @@
                             <div class="table-responsive drive-items-table-wrapper">
                                 <table class="table">
                                     <thead>
-                                        <tr>
-                                            <th class="type"></th>
-                                            <th class="name truncate">Name</th>
-                                            <th class="date">Uploaded</th>
-                                            <th class="size">Size</th>
+
+                                        <tr id="tableHeader">
+                                            <!-- Table headers will be populated dynamically -->
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="type">
-                                                <i class="fa fa-file-text-o text-primary"></i>
-                                            </td>
-                                            <td class="name truncate">
-                                                <a href="#">Meeting Notes.txt</a>
-                                            </td>
-                                            <td class="date">Sep 23, 2015</td>
-                                            <td class="size">18 KB</td>
-                                        </tr>
-                       
+                                    <tbody id="tableBody">
+                                        <!-- Table body will be populated dynamically -->
                                     </tbody>
+
                                 </table>
                             </div>
                         </div>
@@ -235,6 +231,7 @@
 
 
 <!-- Modal -->
+<!-- Image pop Model -->
 
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -246,14 +243,99 @@
                 </button>
             </div>
             <div class="modal-body">
+                <form id="fileUploadForm" action="/ExFile/AddFile" enctype="multipart/form-data" method="post">
+                    <div class="form-group">
+                        <label for="title" class="form-label">title </label>
+                        <input type="text" class="form-control" id="title" name="Title" aria-describedby="titleHelper">
 
-                <label>File upload</label>
-                <input type="file" accept="*" placeholder="insert file" class="form-group" />
+                    </div>
+                    <div class="form-group">
+                        <label for="file" class="form-label">Upload file</label>
+                        <input type="file" class="form-control" id="file" name="file">
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" oclass="btn btn-primary" form="fileUploadForm">Save changes</button>
             </div>
         </div>
     </div>
-</div>  
+</div>
+
+<!-- Modal -->
+<!-- Pop model for excel-->
+<!-- Modal for Excel File Upload -->
+<div class="modal fade" id="excelModal" tabindex="-1" role="dialog" aria-labelledby="excelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="excelModalLabel">Upload Excel File</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="excelForm" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="file">Choose Excel File</label>
+                        <input type="file" class="form-control-file" id="file" name="file">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<script>
+    $(function () {
+        $("#excelForm").submit(function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: '@Url.Action("ExcelFileReader", "ExFile")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    // Populate modal with table data
+                    $("#excelModal").modal("hide");
+                    $("#tableHeader").empty();
+                    $("#tableBody").empty();
+                    var headers = response.excelData[0];
+                    var rows = response.excelData.slice(1);
+                    for (var i = 0; i < headers.length; i++) {
+                        $("#tableHeader").append("<th>" + headers[i] + "</th>");
+                    }
+                    for (var j = 0; j < rows.length; j++) {
+                        var row = "<tr>";
+                        for (var k = 0; k < rows[j].length; k++) {
+                            row += "<td>" + rows[j][k] + "</td>";
+                        }
+                        row += "</tr>";
+                        $("#tableBody").append(row);
+                    }
+                    // Populate result in JSON format below the view
+                    $("#jsonResult").html(JSON.stringify(response.excelData));
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>

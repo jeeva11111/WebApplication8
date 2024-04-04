@@ -20,6 +20,8 @@ namespace WebApplication8.Models.Video
         public ICollection<Models.Video.Subscribes> Subscribers { get; set; }
         public ICollection<Models.Video.Audio> Audio { get; set; }
 
+        public ICollection<Models.ExFile.ImageUploadModel> ImageUploads { get; set; }
+
         public string? Password { get; set; }
         public string? Email { get; set; }
         public string? Department { get; set; }

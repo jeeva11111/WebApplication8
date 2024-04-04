@@ -114,6 +114,33 @@ namespace WebApplication8.Migrations
                     b.ToTable("Images");
                 });
 
+            modelBuilder.Entity("WebApplication8.Models.ExFile.ImageUploadModel", b =>
+                {
+                    b.Property<int>("FolderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FolderId"));
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FolderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ImageFile");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.FileManager.FileManager", b =>
                 {
                     b.Property<int>("Id")
@@ -482,6 +509,17 @@ namespace WebApplication8.Migrations
                     b.Navigation("Folder");
                 });
 
+            modelBuilder.Entity("WebApplication8.Models.ExFile.ImageUploadModel", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.User", "User")
+                        .WithMany("ImageUploads")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.FileManager.FileManager", b =>
                 {
                     b.HasOne("WebApplication8.Models.Video.User", "user")
@@ -602,6 +640,8 @@ namespace WebApplication8.Migrations
                     b.Navigation("Audio");
 
                     b.Navigation("Chennels");
+
+                    b.Navigation("ImageUploads");
 
                     b.Navigation("Notify");
 

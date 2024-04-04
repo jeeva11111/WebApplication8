@@ -39,34 +39,29 @@ namespace WebApplication8.Controllers.Notes
                         model.ImageData = stream.ToArray();
                     }
                     model.ImageType = model.ImageFile.ContentType;
-
                     _context.Add(model);
                     await _context.SaveChangesAsync();
-
-                    // Redirect to Index action after successful upload
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    // Set a message for no file selected in ViewBag
                     ViewBag.ErrorMessage = "No file selected.";
                 }
             }
-
-            // Return to the same view with a message indicating no file selected
             return View("UploadImage", model);
         }
-
 
         [HttpGet]
         public IActionResult AddNodeModel()
         {
-            var model = new Models.Notes.Notes(); // Create a new instance of Notes model
+            var model = new Models.Notes.Notes();
             return PartialView("_AddNodeModel", model);
         }
+
         public IActionResult AddNotes()
         {
             return PartialView("_HomeCaller");
-        }
+        } 
+
     }
 }

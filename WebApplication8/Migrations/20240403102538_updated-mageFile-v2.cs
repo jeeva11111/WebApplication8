@@ -5,25 +5,25 @@
 namespace WebApplication8.Migrations
 {
     /// <inheritdoc />
-    public partial class updateNotifyv2 : Migration
+    public partial class updatedmageFilev2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "ChennelId",
-                table: "Notifys",
-                type: "int",
+            migrationBuilder.AddColumn<byte[]>(
+                name: "FileData",
+                table: "ImageFile",
+                type: "varbinary(max)",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: new byte[0]);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ChennelId",
-                table: "Notifys");
+                name: "FileData",
+                table: "ImageFile");
         }
     }
 }
