@@ -113,39 +113,39 @@
             });
 
 
-        // Initial file list retrieval
-        getFileList();
+            // Initial file list retrieval
+            getFileList();
 
-        // Function to get the file list from the server
-        function getFileList() {
-            $.ajax({
-                url: '/FileManager/GetFileList',
-                type: 'GET',
-                success: function (data) {
-                    displayFileList(data);
-                },
-                error: function (error) {
-                    console.error('Error getting file list:', error);
-                }
-            });
-        }
-
-        // Function to display the file list
-        function displayFileList(files) {
-            var fileList = $('#fileList');
-            fileList.empty();
-
-            files.forEach(function (file) {
-                var listItem = $('<li class="list-group-item"></li>');
-                var checkbox = $('<input type="checkbox" class="file-checkbox" value="' + file.name + '">');
-                var fileName = $('<span>' + file.name + '</span>');
-
-                listItem.append(checkbox);
-                listItem.append(fileName);
-                fileList.append(listItem);
-            });
-        }
+            // Function to get the file list from the server
+            function getFileList() {
+                $.ajax({
+                    url: '/FileManager/GetFileList',
+                    type: 'GET',
+                    success: function (data) {
+                        displayFileList(data);
+                    },
+                    error: function (error) {
+                        console.error('Error getting file list:', error);
+                    }
                 });
+            }
+
+            // Function to display the file list
+            function displayFileList(files) {
+                var fileList = $('#fileList');
+                fileList.empty();
+
+                files.forEach(function (file) {
+                    var listItem = $('<li class="list-group-item"></li>');
+                    var checkbox = $('<input type="checkbox" class="file-checkbox" value="' + file.name + '">');
+                    var fileName = $('<span>' + file.name + '</span>');
+
+                    listItem.append(checkbox);
+                    listItem.append(fileName);
+                    fileList.append(listItem);
+                });
+            }
+        });
     </script>
 </body>
 </html>

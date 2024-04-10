@@ -12,8 +12,8 @@ using WebApplication8.Data;
 namespace WebApplication8.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240404045959_Updated-taskPost")]
-    partial class UpdatedtaskPost
+    [Migration("20240409111058_LightCode")]
+    partial class LightCode
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,7 +47,7 @@ namespace WebApplication8.Migrations
                     b.ToTable("UserProfiles");
                 });
 
-            modelBuilder.Entity("WebApplication8.Models.ExFile.ExFile", b =>
+            modelBuilder.Entity("WebApplication8.Models.ExFile.DynamicExcelData", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,93 +55,16 @@ namespace WebApplication8.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("FilePath")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("FolderId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FolderId");
-
-                    b.ToTable("ExFiles");
-                });
-
-            modelBuilder.Entity("WebApplication8.Models.ExFile.Folder", b =>
-                {
-                    b.Property<int>("FolderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FolderId"));
-
-                    b.Property<int?>("FolderId1")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ParentFolderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("FolderId");
-
-                    b.HasIndex("FolderId1");
-
-                    b.ToTable("Folder");
-                });
-
-            modelBuilder.Entity("WebApplication8.Models.ExFile.Image", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FolderId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("DataJson")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FolderId");
-
-                    b.ToTable("Images");
-                });
-
-            modelBuilder.Entity("WebApplication8.Models.ExFile.ImageUploadModel", b =>
-                {
-                    b.Property<int>("FolderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FolderId"));
-
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ImageType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("FolderId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ImageFile");
+                    b.ToTable("ExcelData");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.FileManager.FileManager", b =>
@@ -179,7 +102,7 @@ namespace WebApplication8.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("fileManagers");
+                    b.ToTable("FileManager");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Notes.Notes", b =>
@@ -378,6 +301,64 @@ namespace WebApplication8.Migrations
                     b.ToTable("Chennels");
                 });
 
+            modelBuilder.Entity("WebApplication8.Models.Video.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("stateId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("stateId");
+
+                    b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Video.Country", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Country");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Video.State", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StateName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("State");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.Video.Subscribes", b =>
                 {
                     b.Property<int>("Id")
@@ -415,6 +396,12 @@ namespace WebApplication8.Migrations
                     b.Property<string>("Categories")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Department")
                         .HasColumnType("nvarchar(max)");
 
@@ -433,7 +420,16 @@ namespace WebApplication8.Migrations
                     b.Property<string>("Roles")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("StateId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("StateId");
 
                     b.ToTable("Users");
                 });
@@ -481,46 +477,6 @@ namespace WebApplication8.Migrations
                     b.HasIndex("ChannelId");
 
                     b.ToTable("Videos");
-                });
-
-            modelBuilder.Entity("WebApplication8.Models.ExFile.ExFile", b =>
-                {
-                    b.HasOne("WebApplication8.Models.ExFile.Folder", "Folder")
-                        .WithMany("ExFiles")
-                        .HasForeignKey("FolderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Folder");
-                });
-
-            modelBuilder.Entity("WebApplication8.Models.ExFile.Folder", b =>
-                {
-                    b.HasOne("WebApplication8.Models.ExFile.Folder", null)
-                        .WithMany("SubFolder")
-                        .HasForeignKey("FolderId1");
-                });
-
-            modelBuilder.Entity("WebApplication8.Models.ExFile.Image", b =>
-                {
-                    b.HasOne("WebApplication8.Models.ExFile.Folder", "Folder")
-                        .WithMany()
-                        .HasForeignKey("FolderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Folder");
-                });
-
-            modelBuilder.Entity("WebApplication8.Models.ExFile.ImageUploadModel", b =>
-                {
-                    b.HasOne("WebApplication8.Models.Video.User", "User")
-                        .WithMany("ImageUploads")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.FileManager.FileManager", b =>
@@ -591,6 +547,28 @@ namespace WebApplication8.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("WebApplication8.Models.Video.City", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.State", "state")
+                        .WithMany()
+                        .HasForeignKey("stateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("state");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Video.State", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.Country", "country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("country");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.Video.Subscribes", b =>
                 {
                     b.HasOne("WebApplication8.Models.Video.Chennel", "Chennel")
@@ -610,6 +588,27 @@ namespace WebApplication8.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("WebApplication8.Models.Video.User", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId");
+
+                    b.HasOne("WebApplication8.Models.Video.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
+                    b.HasOne("WebApplication8.Models.Video.State", "State")
+                        .WithMany()
+                        .HasForeignKey("StateId");
+
+                    b.Navigation("City");
+
+                    b.Navigation("Country");
+
+                    b.Navigation("State");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.Video.Video", b =>
                 {
                     b.HasOne("WebApplication8.Models.Video.Chennel", "Channel")
@@ -619,13 +618,6 @@ namespace WebApplication8.Migrations
                         .IsRequired();
 
                     b.Navigation("Channel");
-                });
-
-            modelBuilder.Entity("WebApplication8.Models.ExFile.Folder", b =>
-                {
-                    b.Navigation("ExFiles");
-
-                    b.Navigation("SubFolder");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Quiz.Quiz", b =>
@@ -643,8 +635,6 @@ namespace WebApplication8.Migrations
                     b.Navigation("Audio");
 
                     b.Navigation("Chennels");
-
-                    b.Navigation("ImageUploads");
 
                     b.Navigation("Notify");
 

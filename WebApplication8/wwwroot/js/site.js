@@ -1,4 +1,5 @@
-﻿const { data } = require("jquery");
+﻿
+
 
 let department;
 
@@ -13,12 +14,18 @@ $(document).ready(() => {
     GetNotification();
     ProfileCard();
     GetUserVideos();
+
     // NotifyCurrentUserMessage();
     //NotifyVideoPostMessage();
     //  startQuiz()
     GetNotify();
     GetFolderUpdates();
-    //  GetServices()
+
+
+
+
+    GetCountryList();
+
 
     toastr.options = {
         'closeButton': true,
@@ -44,11 +51,45 @@ $(document).ready(() => {
 
 
 
+    // Change event for state dropdown
+    $('#country-options').on('change', function () {
+        var stateId = $(this).val();
 
+        $.ajax({
+            url: '/Account/CityGet/',
+            type: 'GET',
+            data: { stateId: stateId },
+            success: function (data) {
+                // alert(JSON.stringify(data))
+                $('#state-options').empty();
 
+                //  debugger;
+                $.each(data, (idx, val) => {
+                    //debugger;
+                    $('#state-options').append($('<option>', { value: val.countryId }).text(val.stateName));
+                })
+            }
+        });
+    });
 
+    $('#state-options').on("change", function () {
+        const city = $(this).val()
+        $.ajax({
+            url: "/Account/GetStateList/",
+            type: 'GET',
+            data: { cityId: city },
+            success: function (res) {
+                $('#city-options').empty();
+                //  $('#state-options').empty();
+                $.each(res, (idx, val) => {
+                    $('#city-options').append($('<option>', { value: val.id }).text(val.cityName))
+                })
+            }
+        })
+    })
 
 })
+
 
 // >>---------->>> Getting the Vidoes list : Controller - Chennel
 function GetVideos() {
@@ -81,8 +122,6 @@ function GetVideos() {
                             </div>
                         </div>
                     </div>`;
-
-
             });
 
             // Append the generated HTML to the designated element
@@ -765,3 +804,168 @@ function AddTaskModel() {
         }
     });
 }
+
+
+
+
+function GetAllFilesFromUploadsFolder() {
+    $.ajax({
+        url: '/ExFile/GettingExcelData',
+        type: 'GET',
+        success: function (res) {
+            console.log(res);
+            // Correct usage of template literals here.
+            // $("#FolderStore").append(`<h1>${res.message}</h1>`);
+        },
+        error: function (err) {
+            console.error("Error fetching data: ", err);
+        }
+    });
+}
+
+("#country-options").on('change', function () {
+    alert("----------")
+})
+
+
+
+function GetCountryList() {
+    {
+        $.ajax({
+            url: '/Account/GetCountry',
+            type: 'GET',
+            success: function (data) {
+                $.each(data, function (i, state) {
+                    $('#country-options').append($('<option>', {
+                        value: state.id,
+                        text: state.name
+                    }));
+                });
+            }
+        });
+    }
+}
+
+
+
+
+// Function to fetch user profile information and populate the modal
+function GetProfileInfo() {
+
+    let editModelStore = '';
+    $.ajax({
+        url: '/Account/GetProfileInfo',
+        type: 'GET',
+        success: function (res) {
+            // Populate the modal with user information
+            var email = $('#email').val(res.message.email);
+            var about = $('#categories').val(res.message.about);
+            $('#country-options').val(res.message.countryId);
+            $('#state-options').val(res.message.stateId);
+            $('#city-options').val(res.message.cityId);
+            $('#categories').val(res.message.categories);
+
+            editModelStore += `<div class="modal fade" id="EditProfile-model" tabindex="-1" role="dialog" aria-labelledby="EditProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="EditProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" id="email" class="form-control" value="${res.message.email}" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="about">About</label>
+                    <textarea id="about" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="country-options">Country</label>
+                    <select id="country-options" class="form-control">
+                    <option>
+                     value="${res.message.countryId}"
+                    </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="state-options">State</label>
+                    <select id="state-options" class="form-control">
+                    <option >
+                     ${res.message.stateId}
+                    </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="city-options">City</label>
+                    <select id="city-options" class="form-control">
+                    <option>
+                    ${res.message.cityId}
+                    </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="categories">Categories</label>
+                    <input type="text" id="categories" class="form-control" placeholder="${res.message.about}" disabled >
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="saveChangesProfileBtn" type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+`           // Show the modal
+            $("#EditProfile-model").modal('show');
+
+
+            $("#edit-ProfileModel").html(editModelStore)
+        },
+        error: function (xhr, status, error) {
+            alert(error);
+        }
+    });
+}
+
+// Function to handle saving the updated profile
+function SaveProfileChanges() {
+    var updatedProfile = {
+        About: $('#about').val(),
+        Categories: $('#categories').val(),
+        CountryId: $('#country-options').val(),
+        CityId: $('#city-options').val(),
+        StateId: $('#state-options').val(),
+        ProfileImage: $('#e4').val() // Assuming you have an input field for ProfileImage
+    };
+
+    $.ajax({
+        url: '/Account/ProfileUpdate',
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(updatedProfile),
+        success: function (res) {
+            if (res.success) {
+                // Optionally show a success message or perform other actions
+                alert("Profile updated successfully");
+                $("#EditProfile-model").modal('hide'); // Hide the modal
+            } else {
+                alert("Failed to update profile: " + res.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("Failed to update profile: " + error);
+        }
+    });
+}
+
+// Event listener for the "Save Changes" button
+$('#saveChangesProfileBtn').on('click', function () {
+    SaveProfileChanges();
+});
+
+
+

@@ -6,29 +6,36 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebApplication8.Migrations
 {
     /// <inheritdoc />
-    public partial class updatedmageFilev1 : Migration
+    public partial class LightCode : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Folder",
+                name: "Country",
                 columns: table => new
                 {
-                    FolderId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ParentFolderId = table.Column<int>(type: "int", nullable: true),
-                    FolderId1 = table.Column<int>(type: "int", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Folder", x => x.FolderId);
-                    table.ForeignKey(
-                        name: "FK_Folder_Folder_FolderId1",
-                        column: x => x.FolderId1,
-                        principalTable: "Folder",
-                        principalColumn: "FolderId");
+                    table.PrimaryKey("PK_Country", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExcelData",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DataJson = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExcelData", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,6 +74,46 @@ namespace WebApplication8.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "State",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StateName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CountryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_State", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_State_Country_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Country",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    stateId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cities_State_stateId",
+                        column: x => x.stateId,
+                        principalTable: "State",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -79,52 +126,29 @@ namespace WebApplication8.Migrations
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Department = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Roles = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Roles = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CountryId = table.Column<int>(type: "int", nullable: true),
+                    StateId = table.Column<int>(type: "int", nullable: true),
+                    CityId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ExFiles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FolderId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ExFiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ExFiles_Folder_FolderId",
-                        column: x => x.FolderId,
-                        principalTable: "Folder",
-                        principalColumn: "FolderId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Images",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FolderId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Images", x => x.Id);
+                        name: "FK_Users_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Images_Folder_FolderId",
-                        column: x => x.FolderId,
-                        principalTable: "Folder",
-                        principalColumn: "FolderId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Users_Country_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Country",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Users_State_StateId",
+                        column: x => x.StateId,
+                        principalTable: "State",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -154,7 +178,7 @@ namespace WebApplication8.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "fileManagers",
+                name: "FileManager",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -169,30 +193,9 @@ namespace WebApplication8.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_fileManagers", x => x.Id);
+                    table.PrimaryKey("PK_FileManager", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_fileManagers_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ImageFile",
-                columns: table => new
-                {
-                    FolderId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ImageFile", x => x.FolderId);
-                    table.ForeignKey(
-                        name: "FK_ImageFile_Users_UserId",
+                        name: "FK_FileManager_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -363,34 +366,19 @@ namespace WebApplication8.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cities_stateId",
+                table: "Cities",
+                column: "stateId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DepOptionsLists_QuizId",
                 table: "DepOptionsLists",
                 column: "QuizId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExFiles_FolderId",
-                table: "ExFiles",
-                column: "FolderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_fileManagers_UserId",
-                table: "fileManagers",
+                name: "IX_FileManager_UserId",
+                table: "FileManager",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Folder_FolderId1",
-                table: "Folder",
-                column: "FolderId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ImageFile_UserId",
-                table: "ImageFile",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Images_FolderId",
-                table: "Images",
-                column: "FolderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notifys_UserId",
@@ -403,6 +391,11 @@ namespace WebApplication8.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_State_CountryId",
+                table: "State",
+                column: "CountryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Subscribes_ChennelId",
                 table: "Subscribes",
                 column: "ChennelId");
@@ -411,6 +404,21 @@ namespace WebApplication8.Migrations
                 name: "IX_Subscribes_UserId",
                 table: "Subscribes",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_CityId",
+                table: "Users",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_CountryId",
+                table: "Users",
+                column: "CountryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_StateId",
+                table: "Users",
+                column: "StateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Videos_ChannelId",
@@ -428,16 +436,10 @@ namespace WebApplication8.Migrations
                 name: "DepOptionsLists");
 
             migrationBuilder.DropTable(
-                name: "ExFiles");
+                name: "ExcelData");
 
             migrationBuilder.DropTable(
-                name: "fileManagers");
-
-            migrationBuilder.DropTable(
-                name: "ImageFile");
-
-            migrationBuilder.DropTable(
-                name: "Images");
+                name: "FileManager");
 
             migrationBuilder.DropTable(
                 name: "Notes");
@@ -458,13 +460,19 @@ namespace WebApplication8.Migrations
                 name: "Quiz");
 
             migrationBuilder.DropTable(
-                name: "Folder");
-
-            migrationBuilder.DropTable(
                 name: "Chennels");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "State");
+
+            migrationBuilder.DropTable(
+                name: "Country");
         }
     }
 }

@@ -51,11 +51,14 @@
                                     Upload New Item
                                 </button>
 
-                        
+
 
                                 <!-- Button to open modal -->
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#excelModal">
                                     Open Excel Modal
+                                </button>      <!-- Button to open modal -->
+                                <button type="button" class="btn btn-primary" onclick="GetAllFilesFromUploadsFolder()">
+                                    add text
                                 </button>
                             </div>
                         </div>
@@ -160,7 +163,9 @@
                                 <div class="drive-item module text-center">
                                     <div class="drive-item-inner module-inner">
                                         <div class="drive-item-title">
-                                            <a href="#">Meeting Notes.txt</a>
+                                          
+                                                <div id="FolderStore"></div>
+                                            
                                         </div>
                                         <div class="drive-item-thumb">
                                             <a href="#">

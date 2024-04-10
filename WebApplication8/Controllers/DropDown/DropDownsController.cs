@@ -8,8 +8,6 @@ namespace WebApplication8.Controllers.DropDown
         public IActionResult Index()
         {
             //var store = new List<Models.NewFolder.FolderModel>() { new FolderModel() { Subfolders = new List<FileModel>() { new FileModel() { Type = "PDF", Name = "Downloads" } };
-
-
             return View();
         }
     }

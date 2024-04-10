@@ -23,16 +23,15 @@ namespace WebApplication8.Data
         public DbSet<DepOptionsList> DepOptionsLists { get; set; }
         public DbSet<Notes> Notes { get; set; }
         public DbSet<Notify> Notifys { get; set; }
-
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Subscribes> Subscribes { get; set; }
         public DbSet<Audio> Audio { get; set; }
-        public DbSet<FileManager> fileManagers { get; set; }
+        public DbSet<DynamicExcelData> ExcelData { get; set; }
 
-        public DbSet<Folder> Folder { get; set; }
-        public DbSet<ExFile> ExFiles { get; set; }
-        public DbSet<Models.ExFile.Image> Images { get; set; }
+        public DbSet<Country> Country { get; set; }
+        public DbSet<State> State { get; set; }
+        public DbSet<City> Cities { get; set; }
 
-        public DbSet<ImageUploadModel> ImageFile { get; set; }
+
     }
 }

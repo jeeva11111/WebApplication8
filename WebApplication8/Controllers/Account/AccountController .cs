@@ -122,7 +122,7 @@ namespace WebApplication8.Controllers
             userProfileCount.AudioCount = _context.Audio.Count();
             userProfileCount.Subscribers = _context.Subscribes.Count();
 
-            userProfileCount.VideoCount = (from x in _context.Videos where x.ChannelId == userChannel.ChennelId  select x.Id).Count();
+            userProfileCount.VideoCount = (from x in _context.Videos where x.ChannelId == userChannel.ChennelId select x.Id).Count();
 
             //userProfileCount.VideoCount = (from v in _context.Videos where v.ChannelId == 3 select v.Id).Count();
 
@@ -152,6 +152,89 @@ namespace WebApplication8.Controllers
             //var selectedVideos = _context.Videos.Where(x=> x.ChannelId ==1 ).ToList();
             return Json(new { message = storeList });
         }
+
+
+        [HttpGet]
+        public IActionResult GetCountry()
+        {
+            return Json(_context.Country.ToList());
+            //  return Ok(_context.Users.Include(x => x.Id).Where(y => y.CountryId ));
+        }
+
+
+        [HttpGet]
+        public IActionResult CityGet(int? stateId)
+        {
+
+            var storeStates = _context.State
+                        .Where(x => x.CountryId == stateId).Select(x => new { countryId = x.Id, stateName = x.StateName })
+                        .ToList();
+            return Json(storeStates);
+        }
+
+
+        [HttpGet]
+        public IActionResult GetStateList(int? cityId)
+        {
+            var listOfCity = _context.Cities
+                .Where(x => x.stateId == cityId).Select(x => new { id = x.Id, cityName = x.CityName }).ToList();
+
+            return Json(listOfCity);
+        }
+        [HttpGet]
+        public IActionResult GetProfileInfo()
+        {
+
+            var currentUserInfoSession = HttpContext.Session.GetString("UserId");
+            var currentUserInfoContext = _context.Users.FirstOrDefault(x => x.Id == Convert.ToInt32(currentUserInfoSession));
+
+            return Json(new { message = currentUserInfoContext });
+        }
+
+        [HttpGet]
+         public IActionResult ProfileUpdate()
+        {
+            return View();
+        }
+
+        [HttpPut]
+        public IActionResult ProfileUpdate(User model)
+        {
+            try
+            {
+                var loggedInUserId = HttpContext.Session.GetInt32("UserId");
+                if (!loggedInUserId.HasValue)
+                {
+                    return Json(new { success = false, message = "User not logged in" });
+                }
+
+                var userToUpdate = _context.Users.FirstOrDefault(u => u.Id == loggedInUserId.Value);
+                if (userToUpdate != null)
+                {
+                    // Update the user's properties
+                    userToUpdate.About = model.About;
+                    userToUpdate.Categories = model.Categories;
+                    userToUpdate.CountryId = model.CountryId;
+                    userToUpdate.CityId = model.CityId;
+                    userToUpdate.StateId = model.StateId;
+                    userToUpdate.ProfileImage = model.ProfileImage;
+                    // Update the user in the database
+                    _context.Users.Update(userToUpdate);
+                    _context.SaveChanges();
+                    return Json(new { success = true, message = "Profile updated successfully" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "User not found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+
 
     }
 }
