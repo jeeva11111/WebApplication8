@@ -192,7 +192,7 @@ namespace WebApplication8.Controllers
         }
 
         [HttpGet]
-         public IActionResult ProfileUpdate()
+        public IActionResult ProfileUpdate()
         {
             return View();
         }

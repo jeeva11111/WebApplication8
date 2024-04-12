@@ -30,11 +30,11 @@ namespace WebApplication8.Controllers.ExFile
             return View();
         }
 
-
         [HttpGet, Route("GetFile")]
         public IActionResult GetFile()
         {
-            return Json(new { message = "hello world" });
+            var message = _context.ImageUploads.ToList();
+            return Json(message);
         }
 
         [HttpPost]
@@ -82,6 +82,8 @@ namespace WebApplication8.Controllers.ExFile
             }
         }
 
+
+
         [HttpGet, Route("GettingExcelData")]
         public IActionResult GettingExcelData()
         {
@@ -109,7 +111,47 @@ namespace WebApplication8.Controllers.ExFile
             }
         }
 
+        [HttpPost, Route("AddFile")]
+        public async Task<IActionResult> AddFile(IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                var image = new ImageUpload()
+                {
+                    FileName = file.FileName,
+                    FileData = new byte[file.Length],
+                };
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);
+                    image.FileData = stream.ToArray();
+                }
+                _context.ImageUploads.Add(image);
+                _context.SaveChanges();
+            }
+            return View();
+        }
 
+       
+        [HttpPost, Route("DeleteFile/{id}")]
+        public IActionResult DeleteTheFile(int? id)
+        {
+            if (id == null || id <= 0)
+            {
+                return NotFound();
+            }
+
+            var currentModel = _context.ImageUploads.FirstOrDefault(x => x.Id == id);
+            if (currentModel == null)
+            {
+                return NotFound();
+            }
+
+            _context.ImageUploads.Remove(currentModel);
+            _context.SaveChanges();
+
+            return Json(new { status = true });
+        }
 
     }
 }

@@ -14,7 +14,7 @@ $(document).ready(() => {
     GetNotification();
     ProfileCard();
     GetUserVideos();
-
+    GetFileImages();
     // NotifyCurrentUserMessage();
     //NotifyVideoPostMessage();
     //  startQuiz()
@@ -765,33 +765,29 @@ function GetFolderUpdates() {
     });
 }
 
-
 $('#fileUploadForm').on('submit', function (e) {
-    e.preventDefault(); // Prevent the normal submission action
+    e.preventDefault();
 
     var formData = new FormData(this);
 
     $.ajax({
-        url: '/ExFile/AddFile', // Ensure correct route
+        url: '/ExFile/AddFile',
         type: 'POST',
         data: formData,
-        contentType: false, // Necessity for FormData
-        processData: false, // Necessity for FormData
+        contentType: false,
+        processData: false,
         success: function (data) {
-            if (data.success) {
-                alert('File uploaded successfully');
-                $('#exampleModalCenter').modal('hide'); // Close the modal upon success
-                window.location = "/ExFile/Index";
-            } else {
-                alert('No file uploaded or error occurred.');
-            }
+            debugger;
+            GetFileImages();
+            $('.modal').modal("hide");
+           // $("addFileImage").hide();
         },
         error: function () {
+            $('#addFileImage').modal('hide'); // Hide the modal upon error
             alert('There was an error with the file upload');
         }
     });
 });
-
 
 
 function AddTaskModel() {
@@ -950,10 +946,14 @@ function SaveProfileChanges() {
         success: function (res) {
             if (res.success) {
                 // Optionally show a success message or perform other actions
-                alert("Profile updated successfully");
+
+                toastr.info('Profile updated successfully');
+
+                alert("");
                 $("#EditProfile-model").modal('hide'); // Hide the modal
             } else {
-                alert("Failed to update profile: " + res.message);
+                toastr.error("Failed to update profile: " + res.message);
+
             }
         },
         error: function (xhr, status, error) {
@@ -969,3 +969,77 @@ $('#saveChangesProfileBtn').on('click', function () {
 
 
 
+
+function GetFileImages() {
+
+    let storeListItems = '';
+    $.ajax({
+        url: '/ExFile/GetFile',
+        type: 'GET',
+        success: function (res) {
+            $.each(res, function (idx, val) {
+
+                storeListItems += `
+                                 <div class="drive-item module text-center">
+                                    <div class="drive-item-inner module-inner">
+                                        <div class="drive-item-title">
+                                                <div id="FolderStore"></div>
+                                        </div>
+                                        <div class="drive-item-thumb">
+                                            <a href="#">
+                                                <i class="fa fa-file-text-o text-primary"></i>                 
+                                            </a>
+                                            <p>${val.fileName}</p>
+                                        </div>
+                                    </div>
+                                    <div class="drive-item-footer module-footer">
+                                        <ul class="utilities list-inline">
+                                            <li>
+                                                <a href="#"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title=""
+                                                   data-original-title="Download">
+                                                    <i class="fa fa-download" ></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title=""
+                                                   onclick="DeleteFile(${val.id})"
+                                                   data-original-title="Delete">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div> `
+            });
+            $("#Documents-list-exFile").html(storeListItems)
+            //GetFileImages();
+            //location.reload();
+            $("#exampleModalCenter").hide();
+        },
+        error: function (xhr, status, error) {
+            toastr.error("unable to display the document list " + error.message)
+        }
+    })
+}
+
+
+function DeleteFile(id) {
+    $.ajax({
+        url: '/ExFile/deleteFile/' + id,
+        type: "POST",
+        success: function (res) {
+            toastr.info("Image has been deleted")
+            //   location.reload();
+            GetFileImages();
+
+        }, error: function (xhr, status, error) {
+            toastr.error("Unable to delete the image ");
+        }
+    })
+}

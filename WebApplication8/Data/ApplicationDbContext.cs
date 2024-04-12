@@ -27,11 +27,9 @@ namespace WebApplication8.Data
         public DbSet<Subscribes> Subscribes { get; set; }
         public DbSet<Audio> Audio { get; set; }
         public DbSet<DynamicExcelData> ExcelData { get; set; }
-
         public DbSet<Country> Country { get; set; }
         public DbSet<State> State { get; set; }
         public DbSet<City> Cities { get; set; }
-
-
+        public DbSet<ImageUpload> ImageUploads { get; set; }
     }
 }

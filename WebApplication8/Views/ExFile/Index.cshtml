@@ -47,7 +47,7 @@
                             <h2 class="title">My Drive</h2>
                             <div class="actions">
                                 <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#addFileImage">
                                     Upload New Item
                                 </button>
 
@@ -56,7 +56,8 @@
                                 <!-- Button to open modal -->
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#excelModal">
                                     Open Excel Modal
-                                </button>      <!-- Button to open modal -->
+                                </button>
+                                <!-- Button to open modal -->
                                 <button type="button" class="btn btn-primary" onclick="GetAllFilesFromUploadsFolder()">
                                     add text
                                 </button>
@@ -126,6 +127,7 @@
                                             data-toggle="tooltip"
                                             data-placement="bottom"
                                             title=""
+                                            onclick="GetFileImages();"
                                             data-original-title="Refresh">
                                         <i class="fa fa-refresh"></i>
                                     </button>
@@ -159,44 +161,10 @@
                         </div>
                         <div class="drive-wrapper drive-grid-view">
                             <div class="grid-items-wrapper">
-
-                                <div class="drive-item module text-center">
-                                    <div class="drive-item-inner module-inner">
-                                        <div class="drive-item-title">
-                                          
-                                                <div id="FolderStore"></div>
-                                            
-                                        </div>
-                                        <div class="drive-item-thumb">
-                                            <a href="#">
-                                                <i class="fa fa-file-text-o text-primary"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="drive-item-footer module-footer">
-                                        <ul class="utilities list-inline">
-                                            <li>
-                                                <a href="#"
-                                                   data-toggle="tooltip"
-                                                   data-placement="top"
-                                                   title=""
-                                                   data-original-title="Download">
-                                                    <i class="fa fa-download"></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#"
-                                                   data-toggle="tooltip"
-                                                   data-placement="top"
-                                                   title=""
-                                                   data-original-title="Delete">
-                                                    <i class="fa fa-trash"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div id="Documents-list-exFile">
+                                    <!-- Files will be populated dynamically -->
                                 </div>
-                                <!--Life-->
+                                <!--End-->
                             </div>
                         </div>
 
@@ -238,15 +206,16 @@
 <!-- Modal -->
 <!-- Image pop Model -->
 
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addFileImage" tabindex="-1" role="dialog" aria-labelledby="addFileImageModel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Upload a File</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Upload a Image</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <!--cHANGE TO TO HELD HERE-->
             <div class="modal-body">
                 <form id="fileUploadForm" action="/ExFile/AddFile" enctype="multipart/form-data" method="post">
                     <div class="form-group">
@@ -262,7 +231,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" oclass="btn btn-primary" form="fileUploadForm">Save changes</button>
+                <button type="button" class="btn btn-primary" form="fileUploadForm">Save changes</button>
             </div>
         </div>
     </div>

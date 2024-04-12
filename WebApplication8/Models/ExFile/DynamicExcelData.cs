@@ -8,11 +8,8 @@ namespace WebApplication8.Models.ExFile
     {
         [Key]
         public int Id { get; set; }
-
-        public string DataJson { get; set; } // Stores the row's data in JSON format
+        public string? DataJson { get; set; } 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-
     }
 
 }
