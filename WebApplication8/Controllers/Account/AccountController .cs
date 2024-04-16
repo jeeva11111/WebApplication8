@@ -11,14 +11,11 @@ using WebApplication8.Models.Video;
 
 namespace WebApplication8.Controllers
 {
-
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-
         public List<String> _loggedInUsers;
-
         public AccountController(ApplicationDbContext context)
         {
             _context = context;
@@ -232,8 +229,9 @@ namespace WebApplication8.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
-        }
 
+         }
+           
 
 
     }

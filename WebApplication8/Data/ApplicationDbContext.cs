@@ -31,5 +31,7 @@ namespace WebApplication8.Data
         public DbSet<State> State { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<ImageUpload> ImageUploads { get; set; }
+
+        public DbSet<FileManager> FileManager { get; set; }
     }
 }

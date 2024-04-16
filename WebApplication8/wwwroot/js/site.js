@@ -777,10 +777,10 @@ $('#fileUploadForm').on('submit', function (e) {
         contentType: false,
         processData: false,
         success: function (data) {
-            debugger;
+            // debugger;
             GetFileImages();
-            $('.modal').modal("hide");
-           // $("addFileImage").hide();
+            $('#addFileImage').modal("hide");
+            $("#addFileImage").hide();
         },
         error: function () {
             $('#addFileImage').modal('hide'); // Hide the modal upon error
@@ -842,18 +842,12 @@ function GetCountryList() {
     }
 }
 
-
-
-
-// Function to fetch user profile information and populate the modal
 function GetProfileInfo() {
-
     let editModelStore = '';
     $.ajax({
         url: '/Account/GetProfileInfo',
         type: 'GET',
         success: function (res) {
-            // Populate the modal with user information
             var email = $('#email').val(res.message.email);
             var about = $('#categories').val(res.message.about);
             $('#country-options').val(res.message.countryId);
@@ -861,10 +855,10 @@ function GetProfileInfo() {
             $('#city-options').val(res.message.cityId);
             $('#categories').val(res.message.categories);
 
-            editModelStore += `<div class="modal fade" id="EditProfile-model" tabindex="-1" role="dialog" aria-labelledby="EditProfileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+            editModelStore += `<div class="modal fade bd-example-modal-lg" id="EditProfile-model" tabindex="-1" role="dialog" aria-labelledby="EditProfileModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+             <div class="modal-content">
+             <div class="modal-header">
                 <h5 class="modal-title" id="EditProfileModalLabel">Edit Profile</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -877,7 +871,7 @@ function GetProfileInfo() {
                 </div>
                 <div class="form-group">
                     <label for="about">About</label>
-                    <textarea id="about" class="form-control"></textarea>
+                    <input id="about" class="form-control"value="${res.message.about}" disabled />
                 </div>
                 <div class="form-group">
                     <label for="country-options">Country</label>
@@ -905,7 +899,11 @@ function GetProfileInfo() {
                 </div>
                 <div class="form-group">
                     <label for="categories">Categories</label>
-                    <input type="text" id="categories" class="form-control" placeholder="${res.message.about}" disabled >
+                    <input type="text" id="categories" class="form-control" placeholder="${res.message.categories}" disabled >
+                </div>
+                      <div class="form-group">
+                    <label for="about">About</label>
+                    <input type="text" id="about" class="form-control" placeholder="${res.message.about}" disabled >
                 </div>
             </div>
             <div class="modal-footer">
@@ -915,7 +913,7 @@ function GetProfileInfo() {
         </div>
     </div>
 </div>
-`           // Show the modal
+`
             $("#EditProfile-model").modal('show');
 
 
@@ -927,7 +925,6 @@ function GetProfileInfo() {
     });
 }
 
-// Function to handle saving the updated profile
 function SaveProfileChanges() {
     var updatedProfile = {
         About: $('#about').val(),
@@ -935,7 +932,7 @@ function SaveProfileChanges() {
         CountryId: $('#country-options').val(),
         CityId: $('#city-options').val(),
         StateId: $('#state-options').val(),
-        ProfileImage: $('#e4').val() // Assuming you have an input field for ProfileImage
+        ProfileImage: $('#e4').val()
     };
 
     $.ajax({
@@ -945,12 +942,11 @@ function SaveProfileChanges() {
         data: JSON.stringify(updatedProfile),
         success: function (res) {
             if (res.success) {
-                // Optionally show a success message or perform other actions
 
                 toastr.info('Profile updated successfully');
 
                 alert("");
-                $("#EditProfile-model").modal('hide'); // Hide the modal
+                $("#EditProfile-model").modal('hide');
             } else {
                 toastr.error("Failed to update profile: " + res.message);
 
@@ -962,71 +958,101 @@ function SaveProfileChanges() {
     });
 }
 
-// Event listener for the "Save Changes" button
 $('#saveChangesProfileBtn').on('click', function () {
     SaveProfileChanges();
 });
 
 
 
+function RefreshingBlock() {
+    GetFileImages();
+}
+
 
 function GetFileImages() {
-
     let storeListItems = '';
     $.ajax({
         url: '/ExFile/GetFile',
         type: 'GET',
         success: function (res) {
             $.each(res, function (idx, val) {
-
+                const fileIcon = val.fileName.includes("xlsx") ? '<i class="fa fa-file-excel-o text-success"></i>' : '<i class="fa fa-file-text-o text-primary"></i>';
                 storeListItems += `
-                                 <div class="drive-item module text-center">
-                                    <div class="drive-item-inner module-inner">
-                                        <div class="drive-item-title">
-                                                <div id="FolderStore"></div>
-                                        </div>
-                                        <div class="drive-item-thumb">
-                                            <a href="#">
-                                                <i class="fa fa-file-text-o text-primary"></i>                 
-                                            </a>
-                                            <p>${val.fileName}</p>
-                                        </div>
-                                    </div>
-                                    <div class="drive-item-footer module-footer">
-                                        <ul class="utilities list-inline">
-                                            <li>
-                                                <a href="#"
-                                                   data-toggle="tooltip"
-                                                   data-placement="top"
-                                                   title=""
-                                                   data-original-title="Download">
-                                                    <i class="fa fa-download" ></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#"
-                                                   data-toggle="tooltip"
-                                                   data-placement="top"
-                                                   title=""
-                                                   onclick="DeleteFile(${val.id})"
-                                                   data-original-title="Delete">
-                                                    <i class="fa fa-trash"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div> `
+                    <div class="drive-item module text-center">
+                        <div class="drive-item-inner module-inner">
+                            <div class="drive-item-title">
+                                <div id="FolderStore"></div>
+                            </div>
+                            <div class="drive-item-thumb">
+                                <a href="#">${fileIcon}</a>
+                                <p>${val.fileName}</p>
+                            </div>
+                        </div>
+                        <div class="drive-item-footer module-footer">
+                            <ul class="utilities list-inline">
+                                <li>
+                                    <a href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Download" onclick="downloadFile(${val.id})">
+                                        <i class="fa fa-download"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" data-toggle="tooltip" data-placement="top" title="" onclick="DeleteFile(${val.id})" data-original-title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <input name="radioName" type="checkbox" value=${val.id} />
+                                </li>
+                            </ul>
+                        </div>
+                    </div>`;
             });
-            $("#Documents-list-exFile").html(storeListItems)
-            //GetFileImages();
-            //location.reload();
+            $("#Documents-list-exFile").html(storeListItems);
             $("#exampleModalCenter").hide();
         },
         error: function (xhr, status, error) {
-            toastr.error("unable to display the document list " + error.message)
+            toastr.error("Unable to display the document list: " + error.message);
         }
-    })
+    });
 }
+
+
+function collectSelectedFiles() {
+    var selectedIds = [];
+    $('input[name="radioName"]:checked').each(function () {
+        selectedIds.push($(this).val());
+    });
+
+
+    if (selectedIds.length > 0) {
+        alert(selectedIds)
+        DeleteMultipleFiles(selectedIds);
+    } else {
+        toastr.error("No files selected for deletion.");
+    }
+}
+
+
+function DeleteMultipleFiles(ids) {
+    ids.forEach(function (id, index) {
+        $.ajax({
+            url: '/ExFile/deleteFile/' + id,
+            type: "POST",
+            success: function (res) {
+                toastr.info("File with ID " + id + " has been deleted");
+            },
+            error: function (xhr, status, error) {
+                toastr.error("Unable to delete the file with ID " + id + ". Error: " + xhr.responseText);
+            },
+            complete: function () {
+                if (index === ids.length - 1) {
+                    GetFileImages();
+                }
+            }
+        });
+    });
+}
+
 
 
 function DeleteFile(id) {
@@ -1040,6 +1066,44 @@ function DeleteFile(id) {
 
         }, error: function (xhr, status, error) {
             toastr.error("Unable to delete the image ");
+        }
+    })
+}
+
+
+// Download file from serverSide ;
+
+
+
+
+function downloadFile(id) {
+    var downloadUrl = '/ExFile/DownloadFile/' + id;
+
+    // Create a hidden anchor element
+    var anchor = document.createElement('a');
+    anchor.href = downloadUrl;
+    anchor.target = '_blank';
+    anchor.download = '';
+
+
+    document.body.appendChild(anchor);
+    anchor.click();
+
+
+    document.body.removeChild(anchor);
+
+    toastr.success("File download initiated.");
+}
+
+
+function FileManagerAddFile() {
+    $.ajax({
+        url: '/FileManager/addFile',
+        type: 'GET',
+        success: function (res) {
+            console.log(res);
+        }, error: function (xhr, status, error) {
+            console.log(error);
         }
     })
 }

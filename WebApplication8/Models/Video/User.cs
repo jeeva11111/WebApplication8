@@ -1,6 +1,7 @@
 ﻿using Nexmo.Api.Pricing;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebApplication8.Models.ExFile;
 using WebApplication8.Models.FileManager;
 using WebApplication8.Models.Notify;
 
@@ -42,6 +43,8 @@ namespace WebApplication8.Models.Video
         public int? CityId { get; set; }
         [ForeignKey("CityId")]
         public City? City { get; set; }
+
+        public ICollection<ImageUpload>? ImageUploads { get; set; }
 
 
     }
