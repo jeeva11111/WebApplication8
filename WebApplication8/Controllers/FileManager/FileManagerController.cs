@@ -65,7 +65,12 @@ namespace WebApplication8.Controllers.FileManager
         {
             var subFolder = _context.FileManager.Find(parentId);
 
-            return Json(subFolder);
+            return Json(new
+            {
+                success = true,
+                subFolderId = newSubFolder.Id,
+                parentId = parentId
+            });
         }
 
     }
