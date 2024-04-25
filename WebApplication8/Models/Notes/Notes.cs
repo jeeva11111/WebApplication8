@@ -18,8 +18,9 @@ namespace WebApplication8.Models.Notes
         public byte[]? ImageData { get; set; }
         public DateTime DateTime { get; set; }
         public bool starred { get; set; } = true;
-        public int UserId { get; set; }
+   
         [ForeignKey(nameof(UserId))]
         public User? User { get; set; }
+        public int UserId { get; set; }
     }
 }

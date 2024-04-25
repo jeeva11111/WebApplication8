@@ -40,7 +40,6 @@ namespace WebApplication8.Controllers.Message
 
             _context.Messages.Add(messageEntity);
             _context.SaveChanges();
-
             return View();
         }
 
