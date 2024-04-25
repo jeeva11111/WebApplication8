@@ -33,7 +33,7 @@
                     <!-- Video cards will be dynamically added here -->
                 </div>
                 <!--End of video list -->
-                //
+
             </div>
         </div>
         <hr class="mt-0">
@@ -51,14 +51,50 @@
                                 <a class="dropdown-item" href="#"><i class="fas fa-fw fa-times-circle"></i> &nbsp; Close</a>
                             </div>
                         </div>
-                        <h6>Similar Channels</h6>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
+
+<div class="modal" tabindex="-1" role="dialog" id="pro-model">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal Edit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" id="Id" name="Id" />
+                    <div class="form-group">
+                        <label for="pro-name">Name</label>
+                        <input type="text" class="form-control" id="pro-name" placeholder="Name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="pro-about">About</label>
+                        <input type="text" class="form-control" id="pro-about" placeholder="Salary" />
+                    </div>
+                    <div class="form-group">
+                        <label for="pro-roles">Department</label>
+                        <input type="text" class="form-control" id="pro-roles" placeholder="roles" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="return SaveProfileChanges()">Updates changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 <hr />
 

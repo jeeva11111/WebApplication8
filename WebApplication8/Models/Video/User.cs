@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WebApplication8.Models.ExFile;
 using WebApplication8.Models.FileManager;
+using WebApplication8.Models.Message;
+using WebApplication8.Models.Notes;
 using WebApplication8.Models.Notify;
 
 namespace WebApplication8.Models.Video
@@ -46,7 +48,9 @@ namespace WebApplication8.Models.Video
 
         public ICollection<ImageUpload>? ImageUploads { get; set; }
 
+        public ICollection<Notes.Notes>? Notes { get; set; }
 
+        public ICollection<Message.Message>? Messages { get; set; }
     }
 
 

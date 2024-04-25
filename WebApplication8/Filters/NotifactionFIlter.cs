@@ -98,7 +98,6 @@ public class VideoPostNotifactionMessage : ActionFilterAttribute
             var currentChennel = context.HttpContext.RequestServices.GetService(typeof(Chennel)) as Chennel;
 
 
-
             base.OnActionExecuted(context);
         }
     }

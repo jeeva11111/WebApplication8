@@ -4,6 +4,8 @@
     @foreach (var folder in Model)
     {
         <div class="folder" data-id="@folder.Id">@folder.Name</div>
+        <div class="subfolders" style="padding-left: 20px;"></div>
+        <button class="add-subfolder-button" style="margin-left: 20px;">Add Subfolder</button>
     }
 </div>
 
@@ -13,14 +15,12 @@
     <script src="~/js/site.js"></script>
 }
 <script>
-
-  
-
     $(document).ready(function () {
         $('#addFolderButton').click(function () {
             var folderName = prompt("Enter the name of the new folder:");
             if (folderName) {
-                $.post('/FileManager/AddFolder', { folderName: folderName }, function (data) {
+                var parentId = $('.folder.active').data('id'); // Get the active folder's ID
+                $.post('/FileManager/AddFolder', { folderName: folderName, parentId: parentId }, function (data) {
                     if (data.success) {
                         $('.folder-list').append('<div class="folder" data-id="' + data.folderId + '">' + folderName + '</div>');
                     }
@@ -30,12 +30,49 @@
 
         $(document).on('click', '.folder', function () {
             var folderId = $(this).data('id');
-            $.get('/FileManager/GetContents/' + folderId, function (data) {
-                console.log(data);
-            });
+            $('.folder').removeClass('active');
+            $(this).addClass('active');
+            var subfoldersContainer = $(this).next('.subfolders');
+            if (subfoldersContainer.children().length === 0) {
+                $.get('/FileManager/GetContents/' + folderId, function (data) {
+                    $.each(data, function (index, folder) {
+                        var subfolderHtml = '<div class="folder" data-id="' + folder.id + '">' + folder.name + '</div>';
+                        subfoldersContainer.append(subfolderHtml);
+                    });
+                });
+            }
+        });
+
+        $(document).on('click', '.subfolders .folder', function () {
+            var folderId = $(this).data('id');
+            $('.folder').removeClass('active');
+            $(this).addClass('active');
+            var subfoldersContainer = $(this).next('.subfolders');
+            if (subfoldersContainer.children().length === 0) {
+                $.get('/FileManager/GetContents/' + folderId, function (data) {
+                    $.each(data, function (index, folder) {
+                        var subfolderHtml = '<div class="folder" data-id="' + folder.id + '">' + folder.name + '</div>';
+                        subfoldersContainer.append(subfolderHtml);
+                    });
+                });
+            }
+        });
+
+        $(document).on('click', '.add-subfolder-button', function () {
+            var folderName = prompt("Enter the name of the new subfolder:");
+            if (folderName) {
+                var parentId = $(this).prev('.folder').data('id');
+                $.post('/FileManager/PostSubFolder', { folderName: folderName, parentId: parentId }, function (data) {
+                    if (data.success) {
+                        var subfoldersContainer = $(this).prev('.folder').next('.subfolders');
+                        if (subfoldersContainer.children().length === 0) {
+                            subfoldersContainer.append('<div class="folder" data-id="' + data.subFolderId + '">' + folderName + '</div>');
+                        } else {
+                            subfoldersContainer.append('<div class="folder" data-id="' + data.subFolderId + '" style="padding-left: 20px;">' + folderName + '</div>');
+                        }
+                    }
+                });
+            }
         });
     });
-
-
-
 </script>

@@ -61,7 +61,7 @@ namespace WebApplication8.Controllers.Notes
         public IActionResult AddNotes()
         {
             return PartialView("_HomeCaller");
-        } 
+        }
 
     }
 }

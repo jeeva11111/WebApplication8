@@ -61,9 +61,28 @@ namespace WebApplication8.Controllers.FileManager
         }
 
 
-        public IActionResult PostSubFolder(int parentId)
+        [HttpPost("PostSubFolder")]
+        public IActionResult PostSubFolder(string folderName, int parentId)
         {
-            var subFolder = _context.FileManager.Find(parentId);
+            var parentFolder = _context.FileManager.Find(parentId);
+            if (parentFolder == null)
+            {
+                return NotFound();
+            }
+
+            var newSubFolder = new   Models.FileManager.FileManager
+            {
+                Name = folderName,
+                IsDirectory = true,
+                Path = parentFolder.Path + "/" + folderName,
+                LastModified = DateTime.Now,
+                Size = 0,
+                HasDirectories = false,
+                UserId = Convert.ToInt32(HttpContext.Session.GetString("UserId"))
+            };
+
+            _context.FileManager.Add(newSubFolder);
+            _context.SaveChanges();
 
             return Json(new
             {
@@ -72,6 +91,7 @@ namespace WebApplication8.Controllers.FileManager
                 parentId = parentId
             });
         }
+
 
     }
 }

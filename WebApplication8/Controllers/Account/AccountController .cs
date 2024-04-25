@@ -194,18 +194,28 @@ namespace WebApplication8.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult ProfileInfo()
+        {
+
+            var loggedInUser = HttpContext.Session.GetString("UserId");
+            var currentModel = _context.Users.FirstOrDefault(u => u.Id == Convert.ToInt32(loggedInUser));
+            return Json(new { stateModel = currentModel });
+        }
+
         [HttpPut]
-        public IActionResult ProfileUpdate(User model)
+        [Route("Account/ProfileUpdate")]
+        public IActionResult ProfileUpdate([FromBody] User model)
         {
             try
             {
-                var loggedInUserId = HttpContext.Session.GetInt32("UserId");
-                if (!loggedInUserId.HasValue)
+                var loggedInUserId = HttpContext.Session.GetString("UserId");
+                if (string.IsNullOrEmpty(loggedInUserId))
                 {
                     return Json(new { success = false, message = "User not logged in" });
                 }
 
-                var userToUpdate = _context.Users.FirstOrDefault(u => u.Id == loggedInUserId.Value);
+                var userToUpdate = _context.Users.FirstOrDefault(u => u.Id == Convert.ToInt32(loggedInUserId));
                 if (userToUpdate != null)
                 {
                     // Update the user's properties
@@ -215,9 +225,10 @@ namespace WebApplication8.Controllers
                     userToUpdate.CityId = model.CityId;
                     userToUpdate.StateId = model.StateId;
                     userToUpdate.ProfileImage = model.ProfileImage;
-                    // Update the user in the database
+                    userToUpdate.Name = model.Name;
                     _context.Users.Update(userToUpdate);
                     _context.SaveChanges();
+
                     return Json(new { success = true, message = "Profile updated successfully" });
                 }
                 else
@@ -229,9 +240,8 @@ namespace WebApplication8.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
+        }
 
-         }
-           
 
 
     }

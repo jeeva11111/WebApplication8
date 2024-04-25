@@ -40,7 +40,7 @@ namespace WebApplication8.Controllers.ExFile
             {
                 return BadRequest("User ID not found in session.");
             }
-
+         
             // Safely try to convert the user ID to integer
             if (!int.TryParse(currentUser, out int userId))
             {
@@ -53,7 +53,7 @@ namespace WebApplication8.Controllers.ExFile
                 var message = (from user in _context.Users
                                where user.Id == userId
                                join file in _context.ImageUploads on user.Id equals file.CurrentUserId
-                               select  file ).ToList();
+                               select file).ToList();
 
                 return Json(message);
             }
@@ -236,9 +236,6 @@ namespace WebApplication8.Controllers.ExFile
 
             return File(stream, contentType, file.FileName);
         }
-
-
-
 
     }
 }

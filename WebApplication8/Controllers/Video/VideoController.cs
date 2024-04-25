@@ -73,7 +73,7 @@ namespace WebApplication8.Controllers
 
                 int channelId = GetChannelIdForCurrentUser();
                 HttpContext.Items["ChennelId"] = channelId;
-                var channel = _context.Chennels.FirstOrDefault(c => c.ChennelId == channelId);
+                var channel  = _context.Chennels.FirstOrDefault(c => c.ChennelId == channelId);
                 if (channel == null)
                 {
                     return RedirectToAction("Error", "Home");
@@ -108,8 +108,6 @@ namespace WebApplication8.Controllers
 
             return userChannel?.ChennelId ?? 0;
         }
-
-
 
     }
 }

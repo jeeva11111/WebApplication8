@@ -783,7 +783,7 @@ $('#fileUploadForm').on('submit', function (e) {
             $("#addFileImage").hide();
         },
         error: function () {
-            $('#addFileImage').modal('hide'); // Hide the modal upon error
+            $('#addFileImage').modal('hide');
             alert('There was an error with the file upload');
         }
     });
@@ -842,97 +842,56 @@ function GetCountryList() {
     }
 }
 
+
+
+function UpdateProfileModel() {
+    //let obj = { name: $("#pro-name").val(), email: $("#pro-email").val(), roles: $("#pro-roles") }
+    $.ajax({
+        url: '/Account/ProfileInfo',
+        type: 'GET',
+
+        success: function (res) {
+            $("#pro-name").val(res.stateModel.name)
+            $("#pro-about").val(res.stateModel.about)
+            $("#pro-roles").val(res.stateModel.roles)
+            $("#pro-model").modal("show");
+        }
+    })
+}
 function GetProfileInfo() {
-    let editModelStore = '';
     $.ajax({
         url: '/Account/GetProfileInfo',
         type: 'GET',
         success: function (res) {
-            var email = $('#email').val(res.message.email);
-            var about = $('#categories').val(res.message.about);
-            $('#country-options').val(res.message.countryId);
-            $('#state-options').val(res.message.stateId);
-            $('#city-options').val(res.message.cityId);
-            $('#categories').val(res.message.categories);
+            if (res && res.message) {
+                $('#pro-name').val(res.message.name);
+                $('pro-about').val(res.message.about);
+                $('#country-options').val(res.message.countryId);
+                $('#state-options').val(res.message.stateId);
+                $('#city-options').val(res.message.cityId);
+                $('#categories').val(res.message.categories);
 
-            editModelStore += `<div class="modal fade bd-example-modal-lg" id="EditProfile-model" tabindex="-1" role="dialog" aria-labelledby="EditProfileModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-             <div class="modal-content">
-             <div class="modal-header">
-                <h5 class="modal-title" id="EditProfileModalLabel">Edit Profile</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="text" id="email" class="form-control" value="${res.message.email}" disabled>
-                </div>
-                <div class="form-group">
-                    <label for="about">About</label>
-                    <input id="about" class="form-control"value="${res.message.about}" disabled />
-                </div>
-                <div class="form-group">
-                    <label for="country-options">Country</label>
-                    <select id="country-options" class="form-control">
-                    <option>
-                     value="${res.message.countryId}"
-                    </option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="state-options">State</label>
-                    <select id="state-options" class="form-control">
-                    <option >
-                     ${res.message.stateId}
-                    </option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="city-options">City</label>
-                    <select id="city-options" class="form-control">
-                    <option>
-                    ${res.message.cityId}
-                    </option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="categories">Categories</label>
-                    <input type="text" id="categories" class="form-control" placeholder="${res.message.categories}" disabled >
-                </div>
-                      <div class="form-group">
-                    <label for="about">About</label>
-                    <input type="text" id="about" class="form-control" placeholder="${res.message.about}" disabled >
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="saveChangesProfileBtn" type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-`
-            $("#EditProfile-model").modal('show');
-
-
-            $("#edit-ProfileModel").html(editModelStore)
+                // Show the modal after setting values
+                $("#EditProfile-model").modal('show');
+            } else {
+                alert("Profile information not available.");
+            }
         },
         error: function (xhr, status, error) {
-            alert(error);
+            alert("Failed to retrieve profile information: " + error);
         }
     });
 }
 
+
 function SaveProfileChanges() {
     var updatedProfile = {
-        About: $('#about').val(),
-        Categories: $('#categories').val(),
-        CountryId: $('#country-options').val(),
-        CityId: $('#city-options').val(),
-        StateId: $('#state-options').val(),
-        ProfileImage: $('#e4').val()
+        name: $('#pro-name').val(),
+        about: $('#pro-about').val(),
+        //CountryId: $('#country-options').val(),
+        //  CityId: $('#city-options').val(),
+        // StateId: $('#state-options').val(),
+        //  ProfileImage: $('#pro-image').val() // Assuming there's an input field for profile image
     };
 
     $.ajax({
@@ -942,14 +901,10 @@ function SaveProfileChanges() {
         data: JSON.stringify(updatedProfile),
         success: function (res) {
             if (res.success) {
-
                 toastr.info('Profile updated successfully');
-
-                alert("");
-                $("#EditProfile-model").modal('hide');
+                $("#pro-model").modal('hide');
             } else {
                 toastr.error("Failed to update profile: " + res.message);
-
             }
         },
         error: function (xhr, status, error) {
@@ -1017,6 +972,8 @@ function GetFileImages() {
 }
 
 
+
+
 function collectSelectedFiles() {
     var selectedIds = [];
     $('input[name="radioName"]:checked').each(function () {
@@ -1025,7 +982,8 @@ function collectSelectedFiles() {
 
 
     if (selectedIds.length > 0) {
-        alert(selectedIds)
+        // alert(selectedIds)
+        //toastr.info("No files selected for deletion.")
         DeleteMultipleFiles(selectedIds);
     } else {
         toastr.error("No files selected for deletion.");
@@ -1107,3 +1065,124 @@ function FileManagerAddFile() {
         }
     })
 }
+
+
+
+$("#messageForm").on("submit", function (e) {
+    e.preventDefault();
+    var message = $("#sendSmsInput").val();
+    var userId = $("#UserIdInput").val();
+    var obj = { message: message, senderId: userId };
+    alert(JSON.stringify(obj))
+    $.ajax({
+        url: '/sendMessage',
+        type: 'POST',
+        data: obj,
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (response) {
+            console.log('Success:', response);
+            alert("Message sent successfully!");
+        },
+        error: function (xhr, status, error) {
+            console.log('Error:', error);
+            alert("Failed to send message.");
+        }
+    });
+})
+
+
+
+//function postMessage() {
+//    //debugger;
+//    // e.preventDefault();
+//    var message = $("#sendSmsInput").val();
+//    var userId = $("#UserIdInput").val();
+//    var obj = { message: message, senderId: userId };
+//    alert(JSON.stringify(obj))
+//    $.ajax({
+//        url: '/sendMessage',
+//        type: 'POST',
+//        data: obj,
+//        contentType: 'application/json',
+//        dataType: 'json',
+//        success: function (response) {
+//            console.log('Success:', response);
+//            alert("Message sent successfully!");
+//        },
+//        error: function (xhr, status, error) {
+//            console.log('Error:', error);
+//            alert("Failed to send message.");
+//        }
+//    });
+//}
+
+
+
+
+function GetAllUserNames() {
+    let obj = '';
+    $.ajax({
+        url: '/Message/GetAllUser',
+        type: 'GET',
+        contentType: 'application/json',
+        success: function (res) {
+            var users = res.currentList;
+            $.each(users, function (idx, val) {
+                obj += `<div class="chat_list">
+                            <div class="chat_people">
+                                <a  onclick="GetUserInfo(${val.id})">
+                                   <img id="display-image" class="img-fluid" src="data:${val.imageType};base64,${val.imageData}" alt="Video Image">
+                                </a>
+                                <div class="chat_ib">
+                                    <h5>${val.name} <span class="chat_date">Dec 25</span></h5>
+                                
+                                    </div>
+                            </div>
+
+                        </div>`;
+            });
+            $("#chat-list-people").html(obj);
+        },
+        error: function (error) {
+            alert(error);
+        }
+    });
+}
+
+
+
+function GetUserInfo(userId) {
+    $.ajax({
+        url: '/Message/GetUserInfo', // Define this endpoint in your controller
+        type: 'GET',
+        data: { userId: userId },
+        success: function (response) {
+            // Handle the response and update UI with user info
+            console.log(response);
+            // Example: Display user info in a modal
+        },
+        error: function (error) {
+            alert(error);
+        }
+    });
+}
+
+
+    function sendMessageToUser(userId) {
+        var inputValues = $("#message-text");
+        var obj = { message: inputValues, senderId: userId };
+
+        $.ajax({
+            url: 'Message/SendMessage',
+            type: 'POST',
+            contentType: 'application/json',
+            data: { obj },
+            success: function (res) {
+                alert(res)
+            }, error: function (xhr, status, error) {
+                alert(error)
+            }
+        })
+    }
+

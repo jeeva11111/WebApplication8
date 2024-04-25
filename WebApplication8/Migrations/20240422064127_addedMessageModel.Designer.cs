@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication8.Data;
 
@@ -11,9 +12,11 @@ using WebApplication8.Data;
 namespace WebApplication8.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240422064127_addedMessageModel")]
+    partial class addedMessageModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,9 +135,6 @@ namespace WebApplication8.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ReceiverId")
                         .HasColumnType("int");
 
@@ -147,15 +147,7 @@ namespace WebApplication8.Migrations
                     b.Property<DateTime?>("TimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserMmsId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Messages");
                 });
@@ -561,15 +553,6 @@ namespace WebApplication8.Migrations
                     b.Navigation("user");
                 });
 
-            modelBuilder.Entity("WebApplication8.Models.Message.Message", b =>
-                {
-                    b.HasOne("WebApplication8.Models.Video.User", "User")
-                        .WithMany("Messages")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("WebApplication8.Models.Notes.Notes", b =>
                 {
                     b.HasOne("WebApplication8.Models.Video.User", "User")
@@ -728,8 +711,6 @@ namespace WebApplication8.Migrations
                     b.Navigation("Chennels");
 
                     b.Navigation("ImageUploads");
-
-                    b.Navigation("Messages");
 
                     b.Navigation("Notes");
 

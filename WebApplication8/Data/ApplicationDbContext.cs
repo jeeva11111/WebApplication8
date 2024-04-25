@@ -2,6 +2,7 @@
 using WebApplication8.Models.Account.Profile;
 using WebApplication8.Models.ExFile;
 using WebApplication8.Models.FileManager;
+using WebApplication8.Models.Message;
 using WebApplication8.Models.Notes;
 using WebApplication8.Models.Notify;
 using WebApplication8.Models.Quiz;
@@ -33,5 +34,7 @@ namespace WebApplication8.Data
         public DbSet<ImageUpload> ImageUploads { get; set; }
 
         public DbSet<FileManager> FileManager { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
     }
 }
