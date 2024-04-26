@@ -36,5 +36,7 @@ namespace WebApplication8.Data
         public DbSet<FileManager> FileManager { get; set; }
 
         public DbSet<Message> Messages { get; set; }
+
+        public DbSet<NotePads> NotePads { get; set; }
     }
 }

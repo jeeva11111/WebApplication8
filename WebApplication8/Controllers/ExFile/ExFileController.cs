@@ -12,6 +12,7 @@ using System.Text;
 using WebApplication8.Models.Video;
 using Newtonsoft.Json;
 using System.IO.Compression;
+using Microsoft.EntityFrameworkCore;
 namespace WebApplication8.Controllers.ExFile
 {
     [Route("ExFile")]
@@ -40,7 +41,7 @@ namespace WebApplication8.Controllers.ExFile
             {
                 return BadRequest("User ID not found in session.");
             }
-         
+
             // Safely try to convert the user ID to integer
             if (!int.TryParse(currentUser, out int userId))
             {
@@ -100,7 +101,7 @@ namespace WebApplication8.Controllers.ExFile
                         } while (reader.NextResult());
                     }
                 }
-                // Return JSON data
+
                 return Json(new { excelData = excelData });
             }
             catch (Exception ex)
@@ -142,7 +143,7 @@ namespace WebApplication8.Controllers.ExFile
         public async Task<IActionResult> AddFile(IFormFile file)
         {
 
-            // Get the current user's ID from session
+
             var currentUser = HttpContext.Session.GetString("UserId");
 
             if (string.IsNullOrEmpty(currentUser))
@@ -150,7 +151,7 @@ namespace WebApplication8.Controllers.ExFile
                 return BadRequest("User ID not found in session.");
             }
 
-            // Safely try to convert the user ID to integer
+
             if (!int.TryParse(currentUser, out int userId))
             {
                 return BadRequest("Invalid User ID in session.");
@@ -235,6 +236,18 @@ namespace WebApplication8.Controllers.ExFile
             }
 
             return File(stream, contentType, file.FileName);
+        }
+
+
+        [HttpPost]
+        public IActionResult ExFileSearch(string inputValue)
+        {
+            if (!string.IsNullOrEmpty(inputValue))
+            {
+                var files = _context.ImageUploads.Where(x => x.FileName == inputValue).ToList(); 
+                return Json(new { message = files });
+            }
+            return Json(new { message = "No input provided" });
         }
 
     }

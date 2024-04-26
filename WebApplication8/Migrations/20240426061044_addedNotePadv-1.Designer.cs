@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication8.Data;
 
@@ -11,9 +12,11 @@ using WebApplication8.Data;
 namespace WebApplication8.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240426061044_addedNotePadv-1")]
+    partial class addedNotePadv1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,7 +163,7 @@ namespace WebApplication8.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("WebApplication8.Models.Notes.NotePads", b =>
+            modelBuilder.Entity("WebApplication8.Models.Notes.NotePad", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -186,14 +189,14 @@ namespace WebApplication8.Migrations
                     b.Property<string>("ProjectTitle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Starred")
-                        .HasColumnType("bit");
-
                     b.Property<string>("TaskName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("starred")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -612,7 +615,7 @@ namespace WebApplication8.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WebApplication8.Models.Notes.NotePads", b =>
+            modelBuilder.Entity("WebApplication8.Models.Notes.NotePad", b =>
                 {
                     b.HasOne("WebApplication8.Models.Video.User", "User")
                         .WithMany("NotePads")

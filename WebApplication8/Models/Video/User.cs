@@ -48,7 +48,7 @@ namespace WebApplication8.Models.Video
 
         public ICollection<ImageUpload>? ImageUploads { get; set; }
 
-        public ICollection<Notes.Notes>? Notes { get; set; }
+        public ICollection<Notes.NotePads>? NotePads { get; set; }
 
         public ICollection<Message.Message>? Messages { get; set; }
     }

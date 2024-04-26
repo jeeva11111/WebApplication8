@@ -790,16 +790,6 @@ $('#fileUploadForm').on('submit', function (e) {
 });
 
 
-function AddTaskModel() {
-    $.ajax({
-        url: "/notes/AddNodeModel",
-        type: "GET",
-        success: function (data) {
-            $("#holder").html(data);
-            $('#exampleModal').modal('show');
-        }
-    });
-}
 
 
 
@@ -854,10 +844,78 @@ function UpdateProfileModel() {
             $("#pro-name").val(res.stateModel.name)
             $("#pro-about").val(res.stateModel.about)
             $("#pro-roles").val(res.stateModel.roles)
-            $("#pro-model").modal("show");
+            // $("#exampleModal").html(data);
+            $("#exampleModal").modal("show");
         }
     })
 }
+
+
+
+
+
+
+function UpdateNotesModel(id) {
+    $.ajax({
+        url: '/Notes/GetNotes/' + id,
+        type: 'GET',
+        contentType: 'application/json',
+        success: function (response) {
+            var note = response.message;
+
+            $("#task-name").val(note.taskName);
+            $("#task-color").val(note.color);
+            $("#task-description").val(note.description);
+            $("#task-project").val(note.projectTitle);
+            // $("#task-image").val(note.imageData);
+            $("#task-date").val(note.dateTime);
+            $("#task-check").prop('checked', note.starred);
+
+            $("#exampleModal").modal('show');
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            console.error('Error updating profile:', textStatus, errorThrown);
+        }
+    });
+}
+
+
+
+function updateNotesModelInputs() {
+    var obj = {
+        taskName: $('#task-name').val(),
+        color: $('#task-color').val(),
+        description: $('#task-description').val(),
+        projectTitle: $('#task-project').val(),
+        dateTime: $('#task-date').val(),
+        starred: $('#task-check').prop('checked')
+    };
+
+    $.ajax({
+        url: '/Notes/EditProfile',
+        type: 'PUT',
+        data: JSON.stringify(obj),
+        contentType: 'application/json', 
+        success: function (res) {
+          
+            $("#task-name").val('');
+            $("#task-color").val('');
+            $("#task-description").val('');
+            $("#task-project").val('');
+            $("#task-date").val('');
+            $("#task-check").prop('checked', false); 
+
+            $("#exampleModal").modal('hide');
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            console.error('Error updating profile:', textStatus, errorThrown);
+         
+            alert('Error updating profile: ' + xhr.responseJSON.message);
+        }
+    });
+}
+
+
 function GetProfileInfo() {
     $.ajax({
         url: '/Account/GetProfileInfo',
@@ -933,7 +991,7 @@ function GetFileImages() {
             $.each(res, function (idx, val) {
                 const fileIcon = val.fileName.includes("xlsx") ? '<i class="fa fa-file-excel-o text-success"></i>' : '<i class="fa fa-file-text-o text-primary"></i>';
                 storeListItems += `
-                    <div class="drive-item module text-center">
+                    <div class="drive-item module text-center " id="Exfile-holder">
                         <div class="drive-item-inner module-inner">
                             <div class="drive-item-title">
                                 <div id="FolderStore"></div>
@@ -1169,20 +1227,40 @@ function GetUserInfo(userId) {
 }
 
 
-    function sendMessageToUser(userId) {
-        var inputValues = $("#message-text");
-        var obj = { message: inputValues, senderId: userId };
+function sendMessageToUser(userId) {
+    var inputValues = $("#message-text");
+    var obj = { message: inputValues, senderId: userId };
 
-        $.ajax({
-            url: 'Message/SendMessage',
-            type: 'POST',
-            contentType: 'application/json',
-            data: { obj },
-            success: function (res) {
-                alert(res)
-            }, error: function (xhr, status, error) {
-                alert(error)
-            }
-        })
-    }
+    $.ajax({
+        url: 'Message/SendMessage',
+        type: 'POST',
+        contentType: 'application/json',
+        data: { obj },
+        success: function (res) {
+            alert(res)
+        }, error: function (xhr, status, error) {
+            alert(error)
+        }
+    })
+}
+
+
+$("#exFile-search").on('submit', function (e) {
+    e.preventDefault();
+    var inputValue = $(this).find('input[type="search"]').val();
+
+    $.ajax({
+        url: 'ExFile/ExFileSearch',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(inputValue),
+        success: function (res) {
+            console.log(res);
+
+            $("#Exfile-holder").html(res.message);
+        }
+    });
+});
+
+
 

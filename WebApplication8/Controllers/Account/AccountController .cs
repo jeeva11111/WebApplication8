@@ -139,6 +139,8 @@ namespace WebApplication8.Controllers
         [HttpGet]
         public IActionResult InduvialVideoPostedList()
         {
+
+            //HttpContext.Session.GetString("UserId")
             string userIdString = HttpContext.Session.GetString("UserId");
 
             int userId = Convert.ToInt32(userIdString);

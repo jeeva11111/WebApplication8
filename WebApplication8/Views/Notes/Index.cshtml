@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApplication8.Models.Notes.Notes>
+﻿@model IEnumerable<WebApplication8.Models.Notes.NotePads>
 
 
 
@@ -27,6 +27,7 @@
             <th>Folder Image</th>
             <th>Date Time</th>
             <th>Starred</th>
+            <td>Edit</td>
         </tr>
     </thead>
     <tbody>
@@ -44,7 +45,11 @@
 
                     }
                 <td>@note.DateTime.ToString("MM/dd/yyyy")</td>
-                <td>@(note.starred ? "Yes" : "No")</td>
+                <td>@(note.Starred ? "Yes" : "No")</td>
+                <td class="text-center">
+                    <button class="btn btn-outline-primary" onclick="UpdateNotesModel(@note.Id)">Edit</button>
+
+                </td>
             </tr>
         }
     </tbody>
