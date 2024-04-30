@@ -6,6 +6,7 @@ using WebApplication8.Models.FileManager;
 using WebApplication8.Models.Message;
 using WebApplication8.Models.Notes;
 using WebApplication8.Models.Notify;
+using WebApplication8.Models.SkillsAssignments;
 
 namespace WebApplication8.Models.Video
 {
@@ -51,6 +52,9 @@ namespace WebApplication8.Models.Video
         public ICollection<Notes.NotePads>? NotePads { get; set; }
 
         public ICollection<Message.Message>? Messages { get; set; }
+        public ICollection<SkillsAssignmentsModel>? SkillsAssignments { get; set; }
+
+
     }
 
 

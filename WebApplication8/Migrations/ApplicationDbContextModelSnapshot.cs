@@ -147,15 +147,12 @@ namespace WebApplication8.Migrations
                     b.Property<DateTime?>("TimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserMmsId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserMmsId");
 
                     b.ToTable("Messages");
                 });
@@ -329,6 +326,39 @@ namespace WebApplication8.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Quiz");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.SkillsAssignments.SkillsAssignmentsModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("Progress")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProjectDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProjectName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SkillsAssignments");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Video.Audio", b =>
@@ -607,7 +637,9 @@ namespace WebApplication8.Migrations
                 {
                     b.HasOne("WebApplication8.Models.Video.User", "User")
                         .WithMany("Messages")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserMmsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -661,6 +693,17 @@ namespace WebApplication8.Migrations
                     b.HasOne("WebApplication8.Models.Video.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.SkillsAssignments.SkillsAssignmentsModel", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.User", "User")
+                        .WithMany("SkillsAssignments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -787,6 +830,8 @@ namespace WebApplication8.Migrations
                     b.Navigation("NotePads");
 
                     b.Navigation("Notify");
+
+                    b.Navigation("SkillsAssignments");
 
                     b.Navigation("Subscribers");
 

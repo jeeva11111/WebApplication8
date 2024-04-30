@@ -12,8 +12,8 @@ using WebApplication8.Data;
 namespace WebApplication8.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240416092513_added-fileManager-v1")]
-    partial class addedfileManagerv1
+    [Migration("20240430123430_message-addeed")]
+    partial class messageaddeed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,7 +112,6 @@ namespace WebApplication8.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Path")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Size")
@@ -126,6 +125,81 @@ namespace WebApplication8.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("FileManager");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Message.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReceiverId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SenderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TextMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserMmsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserMmsId");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Notes.NotePads", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProjectTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Starred")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TaskName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("NotePads");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Notes.Notes", b =>
@@ -157,10 +231,15 @@ namespace WebApplication8.Migrations
                     b.Property<string>("TaskName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("starred")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Notes");
                 });
@@ -250,6 +329,39 @@ namespace WebApplication8.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Quiz");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.SkillsAssignments.SkillsAssignmentsModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("Progress")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProjectDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProjectName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SkillsAssignments");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.Video.Audio", b =>
@@ -524,6 +636,39 @@ namespace WebApplication8.Migrations
                     b.Navigation("user");
                 });
 
+            modelBuilder.Entity("WebApplication8.Models.Message.Message", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.User", "User")
+                        .WithMany("Messages")
+                        .HasForeignKey("UserMmsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Notes.NotePads", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.User", "User")
+                        .WithMany("NotePads")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.Notes.Notes", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.Notify.Notify", b =>
                 {
                     b.HasOne("WebApplication8.Models.Video.User", "UserList")
@@ -551,6 +696,17 @@ namespace WebApplication8.Migrations
                     b.HasOne("WebApplication8.Models.Video.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.SkillsAssignments.SkillsAssignmentsModel", b =>
+                {
+                    b.HasOne("WebApplication8.Models.Video.User", "User")
+                        .WithMany("SkillsAssignments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -672,7 +828,13 @@ namespace WebApplication8.Migrations
 
                     b.Navigation("ImageUploads");
 
+                    b.Navigation("Messages");
+
+                    b.Navigation("NotePads");
+
                     b.Navigation("Notify");
+
+                    b.Navigation("SkillsAssignments");
 
                     b.Navigation("Subscribers");
 

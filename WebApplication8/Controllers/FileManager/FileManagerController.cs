@@ -18,7 +18,8 @@ namespace WebApplication8.Controllers.FileManager
             _context = context;
         }
 
-        [HttpGet] 
+        [HttpGet("")]
+        [HttpGet]
         public IActionResult Index()
         {
             var folders = _context.FileManager.Where(f => f.IsDirectory && f.Path == null).ToList();

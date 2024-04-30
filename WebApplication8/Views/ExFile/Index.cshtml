@@ -271,7 +271,7 @@
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    // Populate modal with table data
+                   
                     $("#excelModal").modal("hide");
                     $("#tableHeader").empty();
                     $("#tableBody").empty();
@@ -289,10 +289,12 @@
                         $("#tableBody").append(row);
                     }
                     // Populate result in JSON format below the view
+                    $("#excelModal").modal("hide");
                     $("#jsonResult").html(JSON.stringify(response.excelData));
                 },
                 error: function (xhr, status, error) {
                     console.error(error);
+                    $("#excelModal").modal("hide");
                 }
             });
         });

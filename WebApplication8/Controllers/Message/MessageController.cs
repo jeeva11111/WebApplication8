@@ -9,6 +9,8 @@ namespace WebApplication8.Controllers.Message
     {
 
         private readonly ApplicationDbContext _context;
+
+        private readonly RequestDelegate _requestDelegate;
         public MessageController(ApplicationDbContext context)
         {
             _context = context;
@@ -46,20 +48,29 @@ namespace WebApplication8.Controllers.Message
         [HttpGet]
         public IActionResult GetAllUser()
         {
-            var currentList = _context.Users.Select(x => new
+            var currentUser = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(currentUser))
             {
-                id = x.Id,
-                name = x.Name,
-                image = x.ProfileImage
-            }).ToList();
+                return Json(false);
+            }
 
+            var currentUserId = Convert.ToInt32(currentUser);
 
-            var selector = (from x in _context.Users join m in _context.Messages on x.Id equals m.UserMmsId select new { name = x.Name, image = x.ProfileImage, m.TimeStamp }).ToList();
+            var currentList = _context.Users
+                                      .Where(user => user.Id != currentUserId) // Filter out the current user
+                                      .Select(x => new
+                                      {
+                                          id = x.Id,
+                                          name = x.Name,
+                                          image = x.ProfileImage
+                                      })
+                                      .ToList();
+
             return Json(new { currentList });
         }
 
         [HttpPost]
-        public IActionResult whatsApp(int senderId, string textMessage)
+        public IActionResult whatsApp([FromBody] Models.Message.Message data) // Assuming MessageData is a defined class with SenderId and TextMessage
         {
             var currentUser = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(currentUser))
@@ -67,17 +78,27 @@ namespace WebApplication8.Controllers.Message
                 return Json(false);
             }
 
-            var GetEmailOfSender = _context.Users.Where(x => x.Id == Convert.ToInt32(currentUser)).First();
+            var GetEmailOfSender = _context.Users.FirstOrDefault(x => x.Id == Convert.ToInt32(currentUser));
+            if (GetEmailOfSender == null)
+            {
+                return Json(false);
+            }
 
             var currentMessage = new Models.Message.Message()
             {
-                SenderId = Convert.ToInt32(currentUser),
-                ReceiverId = senderId,
-                TextMessage = textMessage,
+                SenderId = GetEmailOfSender.Id,
+                ReceiverId = data.SenderId,
+                TextMessage = data.TextMessage,
                 TimeStamp = DateTime.Now,
-                Email = GetEmailOfSender.Email
+                Email = GetEmailOfSender.Email,
+                UserMmsId = GetEmailOfSender.Id,
+                User = null
+
             };
 
+
+            _context.Messages.Add(currentMessage);
+            _context.SaveChanges();
             return Json(new { message = currentMessage });
         }
 
@@ -105,6 +126,42 @@ namespace WebApplication8.Controllers.Message
         }
 
 
+        [HttpGet]
+        public IActionResult GetReciverMessage(int userId)
+        {
+
+            if (userId <= 0) { return Json(new { message = "unable to find the Id" }); }
+            var currentId = _context.Messages.Where(x => x.SenderId == userId);
+            if (currentId == null)
+            {
+                return Json(new { message = "unable to find the Id" });
+            }
+            var selectMessage = _context.Messages.Where(x => x.ReceiverId == userId).ToList();
+
+            return Json(new { message = currentId });
+        }
+
+        [HttpGet]
+        public IActionResult GetSenderMessage()
+        {
+
+            var currentUser = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(currentUser))
+            {
+                return Json(false);
+            }
+
+            var user = _context.Users.FirstOrDefault(u => u.Id == Convert.ToInt32(currentUser));
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var selectSendMessage = _context.Messages.Where(x => x
+            .SenderId == user.Id).ToList();
+
+            return Json(new { message = selectSendMessage });
+        }
 
     }
 }

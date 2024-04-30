@@ -1,0 +1,53 @@
+﻿@model WebApplication8.Models.SkillsAssignments.SkillsAssignmentsModel;
+
+<div class="modal" tabindex="-1" role="dialog" id="addAssignment">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Assignment</h5>
+             
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+            <div class="modal-body">
+                <form asp-action="AddAssignment" asp-controller="Admin" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="ProjectName">Project Name</label>
+                        <input asp-for="ProjectName" type="text" class="form-control" />
+                        <span asp-validation-for="ProjectName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ProjectDescription">Project Description</label>
+                        <textarea asp-for="ProjectDescription" class="form-control"></textarea>
+                        <span asp-validation-for="ProjectDescription" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="StartDate">Start Date</label>
+                        <input asp-for="StartDate" type="date" class="form-control" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Status">Status</label>
+                        <select asp-for="Status" class="form-control">
+                            <option value="true">Completed</option>
+                            <option value="false">Pending</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Progress">Progress</label>
+                        <input asp-for="Progress" type="number" class="form-control" id="NumberOfPer"/>
+                        <span asp-validation-for="Progress" class="text-danger"></span>
+                    </div>
+                    <!-- Add other properties here -->
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

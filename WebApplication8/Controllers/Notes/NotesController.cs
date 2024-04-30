@@ -105,8 +105,6 @@ namespace WebApplication8.Controllers
             return BadRequest(ModelState);
         }
 
-
-
         [HttpGet]
         public IActionResult GetNotes(int id)
         {

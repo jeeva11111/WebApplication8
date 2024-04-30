@@ -245,6 +245,12 @@ namespace WebApplication8.Controllers
         }
 
 
+        [HttpGet]
+        public IActionResult AddNodeModel()
+        {
+            var model = new Models.Notes.Notes();
+            return PartialView("_AddNodeModel", model);
+        }
 
     }
 }

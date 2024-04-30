@@ -1,16 +1,18 @@
 ﻿
 
 
+let senderMessageId;
 let department;
+
 
 $(document).ready(() => {
     GetVideos();
     GetChennel();
     PrintSideVideos();
-    RotingTheScreenOfQuiz()
+    // RotingTheScreenOfQuiz()
     PrintSideVideos();
     OnChangeSelectDepartment();
-    GetQuiz();
+    // GetQuiz();
     GetNotification();
     ProfileCard();
     GetUserVideos();
@@ -20,7 +22,6 @@ $(document).ready(() => {
     //  startQuiz()
     GetNotify();
     GetFolderUpdates();
-
 
 
 
@@ -292,13 +293,13 @@ function FindTheMatchingRequest(DepValue) {
     BindOptions(store)
 }
 
-function GetBinder(callback) {
-    let store;
-    $.get('Quiz/GetListOfQuiz', (res) => {
-        store = res;
-        callback(store)
-    }).fail((error) => console.log(error))
-}
+//function GetBinder(callback) {
+//    let store;
+//    $.get('Quiz/GetListOfQuiz', (res) => {
+//        store = res;
+//        callback(store)
+//    }).fail((error) => console.log(error))
+//}
 
 
 
@@ -745,25 +746,25 @@ function GetUserVideos() {
 
 
 
-function GetFolderUpdates() {
-    $.ajax({
-        url: '/ExFile/GetFolders',
-        type: 'GET',
+//function GetFolderUpdates() {
+//    $.ajax({
+//        url: '/ExFile/GetFolders',
+//        type: 'GET',
 
-        success: function (data) {
-            alert("printing the record")
+//        success: function (data) {
+//            alert("printing the record")
 
-            $('#folderContainer').empty();
-            $.each(data, function (key, folder) {
+//            $('#folderContainer').empty();
+//            $.each(data, function (key, folder) {
 
-                $('#folderContainer').append('<div >' + folder.name + '</div>');
-            });
-        },
-        error: function (xhr, status, error) {
-            console.log("Error occurred: " + error);
-        }
-    });
-}
+//                $('#folderContainer').append('<div >' + folder.name + '</div>');
+//            });
+//        },
+//        error: function (xhr, status, error) {
+//            console.log("Error occurred: " + error);
+//        }
+//    });
+//}
 
 $('#fileUploadForm').on('submit', function (e) {
     e.preventDefault();
@@ -844,8 +845,8 @@ function UpdateProfileModel() {
             $("#pro-name").val(res.stateModel.name)
             $("#pro-about").val(res.stateModel.about)
             $("#pro-roles").val(res.stateModel.roles)
-            // $("#exampleModal").html(data);
-            $("#exampleModal").modal("show");
+
+            $("#pro-model").modal("show");
         }
     })
 }
@@ -895,21 +896,21 @@ function updateNotesModelInputs() {
         url: '/Notes/EditProfile',
         type: 'PUT',
         data: JSON.stringify(obj),
-        contentType: 'application/json', 
+        contentType: 'application/json',
         success: function (res) {
-          
+
             $("#task-name").val('');
             $("#task-color").val('');
             $("#task-description").val('');
             $("#task-project").val('');
             $("#task-date").val('');
-            $("#task-check").prop('checked', false); 
+            $("#task-check").prop('checked', false);
 
             $("#exampleModal").modal('hide');
         },
         error: function (xhr, textStatus, errorThrown) {
             console.error('Error updating profile:', textStatus, errorThrown);
-         
+
             alert('Error updating profile: ' + xhr.responseJSON.message);
         }
     });
@@ -1210,15 +1211,20 @@ function GetAllUserNames() {
 
 
 
+
 function GetUserInfo(userId) {
+
     $.ajax({
-        url: '/Message/GetUserInfo', // Define this endpoint in your controller
+        url: '/Message/GetUserInfo',
         type: 'GET',
         data: { userId: userId },
         success: function (response) {
-            // Handle the response and update UI with user info
+            $("#senderName").text(response.name)
             console.log(response);
-            // Example: Display user info in a modal
+            GetReciverMessage(response.id);
+            GetSenderMessage();
+            //  GetTheSelectedUserId(response.id)
+            senderMessageId = response.id;
         },
         error: function (error) {
             alert(error);
@@ -1232,7 +1238,7 @@ function sendMessageToUser(userId) {
     var obj = { message: inputValues, senderId: userId };
 
     $.ajax({
-        url: 'Message/SendMessage',
+        url: '/Message/SendMessage',
         type: 'POST',
         contentType: 'application/json',
         data: { obj },
@@ -1250,17 +1256,123 @@ $("#exFile-search").on('submit', function (e) {
     var inputValue = $(this).find('input[type="search"]').val();
 
     $.ajax({
-        url: 'ExFile/ExFileSearch',
+        url: '/ExFile/ExFileSearch',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(inputValue),
         success: function (res) {
             console.log(res);
-
             $("#Exfile-holder").html(res.message);
         }
     });
 });
 
 
+function addAssignment() {
+    $.ajax({
+        type: 'GET',
+        url: '/Admin/AddAssignment',
+        success: function (res) {
+            $("#Assign-model").html(res);
+            $("#addAssignment").modal('show');
+        }
+    })
+}
 
+
+$("#NumberOfPer").on('chnage', function () {
+    var numberOfRows = document.getElementById("NumberOfPer").value;
+
+    $("#assign-tbl tbody").find("tr:not(:first)").remove();
+
+    for (var i = 0; i < numberOfRows - 1; i++) {
+        var table = document.getElementById("assign-tbl");
+
+        var rows = table.getElementsByTagName("tr");
+
+        var rowsOuterHtml = rows[rows.length - 1].outerHTML;
+        var lastrowIdx = document.getElementById('LastIndex').value;
+
+        var nextrowIdx = eval(lastrowIdx) + 1;
+
+
+    }
+})
+
+
+
+
+function TextMessage() {
+    var messageText = $("#message-text").val();
+    var senderId = senderMessageId;
+
+    $.ajax({
+        url: '/Message/whatsApp',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ senderId: senderId, textMessage: messageText }),
+        success: function (res) {
+            toastr.info(`Message has been sent`);
+
+   
+            $("#message-text").val(""); // Clear input field after sending
+        },
+        error: function (xhr, status, error) {
+            toastr.error('Unable to send the message');
+        }
+    });
+}
+
+
+function GetReciverMessage(userId) {
+    $.ajax({
+        url: '/Message/GetReciverMessage',
+        type: 'GET',
+        contentType: 'application/json',
+        data: { userId: userId },
+        success: function (res) {
+            var messages = res.message;
+            $(".msg_history").empty();
+            messages.forEach(function (msg) {
+                var message = `<div class="incoming_msg">
+                                    <div class="incoming_msg_img">
+                                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="user">
+                                    </div>
+                                    <div class="received_msg">
+                                        <div class="received_withd_msg">
+                                            <p>${msg.textMessage}</p>
+                                            <span class="time_date">Received | ${new Date(msg.timeStamp).toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>`;
+                $(".msg_history").append(message);
+            });
+        },
+        error: function (xhr, status, error) {
+            alert(error);
+        }
+    });
+}
+
+
+function GetSenderMessage() {
+    $.ajax({
+        url: '/Message/GetSenderMessage',
+        type: 'GET',
+        success: function (res) {
+            var reponse = res.message;
+
+            $.each(reponse, function (idx, val) {
+                // Update chat interface with the sent message
+                var sentMessage = `<div class="outgoing_msg">
+                                    <div class="sent_msg">
+                                        <p>${val.textMessage}</p>
+                                        <span class="time_date">Sent | ${new Date().toLocaleString()}</span>
+                                    </div>
+                                </div>`;
+                $(".msg_history").append(sentMessage);
+                $("#message-text").val(""); // Clear input field after sending
+            })
+        }
+    })
+}

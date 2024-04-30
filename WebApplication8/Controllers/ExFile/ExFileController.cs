@@ -199,6 +199,8 @@ namespace WebApplication8.Controllers.ExFile
         }
 
 
+
+
         [HttpGet, Route("DownloadFile/{id}")]
         public IActionResult DownloadFile(int? id)
         {
@@ -239,17 +241,7 @@ namespace WebApplication8.Controllers.ExFile
         }
 
 
-        [HttpPost]
-        public IActionResult ExFileSearch(string inputValue)
-        {
-            if (!string.IsNullOrEmpty(inputValue))
-            {
-                var files = _context.ImageUploads.Where(x => x.FileName == inputValue).ToList(); 
-                return Json(new { message = files });
-            }
-            return Json(new { message = "No input provided" });
-        }
-
+      
     }
 }
 
