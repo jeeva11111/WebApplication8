@@ -53,7 +53,7 @@ namespace WebApplication8.Models.Video
 
         public ICollection<Message.Message>? Messages { get; set; }
         public ICollection<SkillsAssignmentsModel>? SkillsAssignments { get; set; }
-
+        public ICollection<Admin.AdminTeams>? AdminTeams { get; set; }
 
     }
 

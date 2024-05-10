@@ -16,9 +16,11 @@ namespace WebApplication8.Controllers.Bookmarks
         }
 
         [HttpGet]
-        public JsonResult JsonArray()
+        public IActionResult ShowBookMarks()
         {
-            return Json(new { message = new string[] { "time", "space", "life", "Alive" } });
+            return PartialView("_BooksMarks");
         }
+
+
     }
 }

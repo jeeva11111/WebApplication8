@@ -27,37 +27,39 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var project in Model)
-                            {
-                                <tr>
-                                    <th scope="row">@project.Id</th>
-                                    <td>@project.ProjectName</td>
-                                    <td>@project.StartDate?.ToString("d")</td>
-                                    <td>
-                                        <span class="@(project.Status == true ? "text-success" : "text-primary") font-12">
-                                            <i class="mdi mdi-checkbox-blank-circle mr-1"></i> @project.Status
-                                        </span>
-                                    </td>
-                                    <td>
-                                    </td>
-                                    <td>
-                                        <p class="mb-0">Progress<span class="float-right">@project.Progress%</span></p>
-                                        <div class="progress mt-2" style="height: 5px;">
-                                            <div class="progress-bar bg-success" role="progressbar" style="width: @project.Progress%;" aria-valuenow="@project.Progress" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="action">
-                                            <a asp-action="Edit" asp-controller="Admin" asp-route-id="@project.Id" class="btn btn-primary">
-                                                Edit
-                                            </a>
-                                            <a href="#" class="text-danger" data-toggle="tooltip" title="Close">
-                                                <i class="fa fa-remove h5 m-0"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
+                         
+                                @foreach (var project in Model)
+                                {
+                                    <tr>
+                                        <th scope="row">@project.Id</th>
+                                        <td>@project.ProjectName</td>
+                                        <td>@project.StartDate?.ToString("d")</td>
+                                        <td>
+                                            <span class="@(project.Status == true ? "text-success" : "text-primary") font-12">
+                                                <i class="mdi mdi-checkbox-blank-circle mr-1"></i> @project.Status
+                                            </span>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">Progress<span class="float-right">@project.Progress%</span></p>
+                                            <div class="progress mt-2" style="height: 5px;">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: @project.Progress%;" aria-valuenow="@project.Progress" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="action">
+                                                <a  data-id="@project.Id" class="btn btn-primary">
+                                                    Edit
+                                                </a>
+                                                <a href="#" class="text-danger" data-toggle="tooltip" title="Close">
+                                                    <i class="fa fa-remove h5 m-0"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                         
                         </tbody>
                     </table>
                 </div>

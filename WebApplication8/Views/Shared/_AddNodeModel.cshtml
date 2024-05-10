@@ -2,7 +2,7 @@
 
 
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModalRE" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -12,16 +12,19 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" enctype="multipart/form-data" asp-action="UploadImage" asp-controller="Notes">
+                <div id="holderC1"></div> <!-- #holder div is placed inside modal body -->
+
+                <form id="notePadSubmitForm" method="post" enctype="multipart/form-data" >
                     <div class="form-group">
                         <label asp-for="TaskName">Task Name</label>
-                        <input asp-for="TaskName" class="form-control" id="task-name" />
+
+                        <input asp-for="TaskName" name="TaskName" class="form-control" id="task-name" />
                         <span asp-validation-for="TaskName" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label asp-for="Color">Color</label>
-                        <select asp-for="Color" class="form-control" id="task-color">
+                        <select asp-for="Color" class="form-control" id="task-color" name="Color">
                             <option value="">--- Select a color ---</option>
                             <option style="background-color:#FFFEFD; " value="#FFFEFD">Purple</option>
                             <option style="background-color:Silver; " value="Silver">Silver</option>
@@ -34,35 +37,35 @@
 
                     <div class="form-group">
                         <label asp-for="Description">Description</label>
-                        <textarea asp-for="Description" class="form-control" id="task-description"></textarea>
+                        <textarea asp-for="Description" name="Description" class="form-control" id="task-description"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label asp-for="ProjectTitle">Project Title</label>
-                        <input asp-for="ProjectTitle" class="form-control" id="task-project" />
+                        <input asp-for="ProjectTitle" name="ProjectTitle" class="form-control" id="task-project" />
                         <span asp-validation-for="ProjectTitle" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label asp-for="ImageFile">Folder Image</label>
-                        <input asp-for="ImageFile" type="file" class="form-control" />
+                        <input asp-for="ImageFile" name="ImageFile" type="file" class="form-control" />
                         <span asp-validation-for="ImageFile" class="text-danger" id="task-image"></span>
                     </div>
 
                     <div class="form-group">
                         <label asp-for="DateTime">Date Time</label>
-                        <input asp-for="DateTime" type="datetime-local" class="form-control" id="task-date" />
+                        <input asp-for="DateTime" name="DateTime" type="datetime-local" class="form-control" id="task-date" />
                         <span asp-validation-for="DateTime" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label>
-                            <input asp-for="Starred" type="checkbox" id="task-check" /> Starred
+                            <input asp-for="Starred" name"Starred" type="checkbox" id="task-check" /> Starred
                         </label>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" onclick="" class="btn btn-primary">Submit</button>
                 </form>
             </div>
             <div class="modal-footer">

@@ -27,6 +27,8 @@ builder.Services.AddSession(options =>
 });
 
 // Register IHttpContextAccessor
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();

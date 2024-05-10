@@ -59,7 +59,6 @@ namespace WebApplication8.Controllers
         }
 
         [HttpPost]
-
         public IActionResult Register(Models.Account.Register register)
         {
             if (ModelState.IsValid)

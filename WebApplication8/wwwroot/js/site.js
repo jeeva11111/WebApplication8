@@ -2,6 +2,7 @@
 
 
 let senderMessageId;
+let currentMessageSelectedContent;
 let department;
 
 
@@ -536,7 +537,7 @@ function AddNodeModel() {
         type: "GET",
         success: function (data) {
             $("#holder").html(data);
-            $('#exampleModal').modal('show');
+            $('#exampleModalRE').modal('show');
         }
     });
 }
@@ -854,6 +855,7 @@ function UpdateProfileModel() {
 
 
 
+//-------------------
 
 
 function UpdateNotesModel(id) {
@@ -863,16 +865,14 @@ function UpdateNotesModel(id) {
         contentType: 'application/json',
         success: function (response) {
             var note = response.message;
-
+            $("#holderC1").html(response);
             $("#task-name").val(note.taskName);
             $("#task-color").val(note.color);
             $("#task-description").val(note.description);
             $("#task-project").val(note.projectTitle);
-            // $("#task-image").val(note.imageData);
             $("#task-date").val(note.dateTime);
             $("#task-check").prop('checked', note.starred);
-
-            $("#exampleModal").modal('show');
+            $("#exampleModalRE").modal('show');
         },
         error: function (xhr, textStatus, errorThrown) {
             console.error('Error updating profile:', textStatus, errorThrown);
@@ -880,9 +880,38 @@ function UpdateNotesModel(id) {
     });
 }
 
+// add the new values to Notes
+$("#notePadSubmitForm").click(function () {
+    // debugger;
+    //  var s = 0;
+});
+
+//$("#notePadSubmitForm").on('click', function (e) {
+//    //e.preventDefault();
+//    var formData = new FormData(this);
+//    $.ajax({
+//        url: '/Notes/UploadImage',
+//        type: 'POST',
+//        contentType: false,
+//        processData: false,
+//        data: formData,
+//        success: function (res) {
+//            console.log("Data added successfully");
+//            $("#exampleModalRE").modal('hide');
+//        },
+//        error: function (xhr, textStatus, errorThrown) {
+//            console.error('Error adding data:', textStatus, errorThrown);
+//        }
+//    });
+//});
+
+
+
+
 
 
 function updateNotesModelInputs() {
+
     var obj = {
         taskName: $('#task-name').val(),
         color: $('#task-color').val(),
@@ -906,7 +935,7 @@ function updateNotesModelInputs() {
             $("#task-date").val('');
             $("#task-check").prop('checked', false);
 
-            $("#exampleModal").modal('hide');
+            $("#exampleModalRE").modal('hide');
         },
         error: function (xhr, textStatus, errorThrown) {
             console.error('Error updating profile:', textStatus, errorThrown);
@@ -1222,8 +1251,8 @@ function GetUserInfo(userId) {
             $("#senderName").text(response.name)
             console.log(response);
             GetReciverMessage(response.id);
-            GetSenderMessage();
-            //  GetTheSelectedUserId(response.id)
+            GetSenderMessage(response.id);
+         
             senderMessageId = response.id;
         },
         error: function (error) {
@@ -1303,6 +1332,7 @@ $("#NumberOfPer").on('chnage', function () {
 
 
 function TextMessage() {
+
     var messageText = $("#message-text").val();
     var senderId = senderMessageId;
 
@@ -1313,9 +1343,9 @@ function TextMessage() {
         data: JSON.stringify({ senderId: senderId, textMessage: messageText }),
         success: function (res) {
             toastr.info(`Message has been sent`);
+            res.senderId = currentMessageSelectedContent;
 
-   
-            $("#message-text").val(""); // Clear input field after sending
+            $("#message-text").val("");
         },
         error: function (xhr, status, error) {
             toastr.error('Unable to send the message');
@@ -1325,6 +1355,7 @@ function TextMessage() {
 
 
 function GetReciverMessage(userId) {
+
     $.ajax({
         url: '/Message/GetReciverMessage',
         type: 'GET',
@@ -1355,15 +1386,17 @@ function GetReciverMessage(userId) {
 }
 
 
-function GetSenderMessage() {
+function GetSenderMessage(userId) {
+
     $.ajax({
-        url: '/Message/GetSenderMessage',
+        url: '/Message/GetSendMessage',
         type: 'GET',
+        data: { userId: userId },
         success: function (res) {
             var reponse = res.message;
 
             $.each(reponse, function (idx, val) {
-                // Update chat interface with the sent message
+
                 var sentMessage = `<div class="outgoing_msg">
                                     <div class="sent_msg">
                                         <p>${val.textMessage}</p>
@@ -1371,7 +1404,7 @@ function GetSenderMessage() {
                                     </div>
                                 </div>`;
                 $(".msg_history").append(sentMessage);
-                $("#message-text").val(""); // Clear input field after sending
+                $("#message-text").val("");
             })
         }
     })

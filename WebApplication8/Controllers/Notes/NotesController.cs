@@ -24,12 +24,8 @@ namespace WebApplication8.Controllers
             return View(_context.NotePads.Where(x => x.UserId == Convert.ToInt32(currentUser)));
         }
 
-        public IActionResult UploadImage()
-        {
-            return View();
-        }
 
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> UploadImage(Models.Notes.NotePads model)
         {
             if (ModelState.IsValid)
@@ -48,14 +44,14 @@ namespace WebApplication8.Controllers
                     _context.NotePads.Update(model);
 
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    return View("Index");
                 }
                 else
                 {
-                    ViewBag.ErrorMessage = "No file selected.";
+                    return Json("unable to save the data");
                 }
             }
-            return View("UploadImage", model);
+            return View("Index");
         }
 
         [HttpGet]
@@ -117,13 +113,5 @@ namespace WebApplication8.Controllers
             var currentNote = _context.NotePads.Where(x => x.Id == id).FirstOrDefault();
             return Json(new { message = currentNote });
         }
-
-
-        public IActionResult EditBasedOnId()
-        {
-            var model = new Models.Notes.NotePads();
-            return PartialView("_AddNodeModel", model);
-        }
-
     }
 }

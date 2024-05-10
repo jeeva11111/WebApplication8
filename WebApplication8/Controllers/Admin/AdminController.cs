@@ -17,20 +17,26 @@ namespace WebApplication8.Controllers.Login
         }
         public IActionResult Index()
         {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult Login(string email, string password)
-        {
-            var checkValidLogin = _context.Users.Where(x => x.Email == email && x.Password == password).FirstOrDefault();
-            if (checkValidLogin != null)
-            {
-                return Json(new { message = false });
-            };
-            ViewBag.LoginInfo = "Invalid Email or password";
 
-            return Json(new { message = true });
+            var listIfItem = _context.AdminTeams.ToList();
+            if (listIfItem == null || _context.AdminTeams == null)
+            {
+                return NotFound();
+            }
+            return View(listIfItem);
         }
+        //[HttpPost]
+        //public IActionResult Login(string email, string password)
+        //{
+        //    var checkValidLogin = _context.Users.Where(x => x.Email == email && x.Password == password).FirstOrDefault();
+        //    if (checkValidLogin != null)
+        //    {
+        //        return Json(new { message = false });
+        //    };
+        //    ViewBag.LoginInfo = "Invalid Email or password";
+
+        //    return Json(new { message = true });
+        //}
 
         public IActionResult Login()
         {
@@ -59,7 +65,7 @@ namespace WebApplication8.Controllers.Login
             if (ModelState.IsValid)
             {
                 var currentUserId = HttpContext.Session.GetString("UserId");
-                if (string.IsNullOrEmpty(currentUserId))
+                if (!string.IsNullOrEmpty(currentUserId))
                 {
                     int userId = Convert.ToInt32(currentUserId);
                     var assignmentModel = new SkillsAssignmentsModel()
@@ -74,9 +80,9 @@ namespace WebApplication8.Controllers.Login
                     _context.SkillsAssignments.Add(assignmentModel);
                     _context.SaveChanges();
                 }
-                return RedirectToAction("Dashboard");
+                return RedirectToAction("Dashboard", model);
             }
-            return View(model); 
+            return View(model);
         }
     }
 

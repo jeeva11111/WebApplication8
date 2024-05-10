@@ -40,5 +40,10 @@ namespace WebApplication8.Data
         public DbSet<NotePads> NotePads { get; set; }
 
         public DbSet<Models.SkillsAssignments.SkillsAssignmentsModel> SkillsAssignments { get; set; }
+
+
+        public DbSet<Models.Admin.AdminTeams> AdminTeams { get; set; }
+
+
     }
 }

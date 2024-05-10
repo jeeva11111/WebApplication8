@@ -102,24 +102,20 @@ namespace WebApplication8.Controllers.Message
             return Json(new { message = currentMessage });
         }
 
-
-
         [HttpGet]
         public IActionResult GetUserInfo(int userId)
         {
             var user = _context.Users.FirstOrDefault(u => u.Id == userId);
             if (user == null)
             {
-                return NotFound(); // Return 404 if user not found
+                return NotFound();
             }
 
-            // Map user data to a simple object for JSON response
             var userInfo = new
             {
                 id = user.Id,
                 name = user.Name,
                 email = user.Email,
-                // Add other properties you want to include
             };
 
             return Json(userInfo);
@@ -161,6 +157,21 @@ namespace WebApplication8.Controllers.Message
             .SenderId == user.Id).ToList();
 
             return Json(new { message = selectSendMessage });
+        }
+
+        [HttpGet]
+        public IActionResult GetSendMessage(int userId)
+        {
+            if (userId <= 0) { return Json(new { message = "unable to find the Id" }); }
+
+            var currentId = _context.Messages.Where(x => x.SenderId == userId);
+
+            if (currentId == null)
+            {
+                return Json(new { message = "user to revice not found" });
+            }
+
+            return Json(new { message = currentId });
         }
 
     }

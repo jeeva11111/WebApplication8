@@ -63,7 +63,7 @@ public class VideoPostNotifactionMessage : ActionFilterAttribute
 
             if (int.TryParse(userId, out int currentUser))
             {
-                // Assuming you want to fetch notifications for the current user and not just the last one from the whole table
+                // the current user and not just the last one from the whole table
                 var notificationsForUser = _context.Videos
                                                     .Where(n => n.Id == currentUser)
                                                      .OrderBy(n => n.Id);
